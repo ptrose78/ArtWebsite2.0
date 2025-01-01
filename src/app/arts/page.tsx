@@ -1,36 +1,55 @@
-import { fetchArts } from '@/app/lib/data';
-import Link from 'next/link';
+'use client';
 
-export default async function Page() {
-  const arts = await fetchArts();
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { addToCart } from '../../store/features/cartSlice'; // Path to your cart slice
+import { useState, useEffect } from 'react';
+import { fetchArts } from '@/app/lib/data'; // Assuming this is a client-side data fetching function
+
+export default function GalleryPage() {
+  const [arts, setArts] = useState<any[]>([]); // Store fetched art data
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    const getArts = async () => {
+      const data = await fetchArts(); // Fetch the arts data
+      setArts(data); // Set the arts data into state
+    };
+
+    getArts(); // Call the function to fetch the data
+  }, []); // Empty dependency array means this runs only once when the component mounts
+
+  const handleAddToCart = (art: any) => {
+    dispatch(addToCart(art)); // Dispatch action to add to cart
+    router.push('/cart'); // Navigate to the cart page after adding the item
+  };
 
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Gallery</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {arts.map((art) => (
-          <div key={art.id} className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
-            <div className="aspect-w-4 aspect-h-3 bg-gray-200">
+      <h1 className="text-2xl font-bold mb-4">Art Gallery</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {arts.length > 0 ? (
+          arts.map((art) => (
+            <div key={art.id} className="border rounded-lg p-4">
               <img
-                src={art.image_url || '/placeholder-image.jpg'}
-                alt={art.title || 'Artwork'}
-                className="w-full h-full object-cover"
+                src={art.image_url || '/placeholder.jpg'} // Fallback image
+                alt={art.name}
+                className="w-full h-48 object-cover rounded-md"
               />
+              <h2 className="text-xl font-bold mt-2">{art.name}</h2>
+              <p className="text-gray-600">Price: ${art.price}</p>
+              <button
+                onClick={() => handleAddToCart(art)}
+                className="mt-4 text-white bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded"
+              >
+                Order Now
+              </button>
             </div>
-            <div className="p-4">
-              <h2 className="text-lg font-semibold text-gray-800">{art.title || 'Artwork Title'}</h2>
-              <p className="text-gray-600 mt-2">${art.price}</p>
-              <div className="flex justify-between mt-4">
-                <Link href={`/order/${art.id}`} className="text-white bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded">
-                  Order Now
-                </Link>
-                <button className="text-teal-500 border border-teal-500 hover:bg-teal-500 hover:text-white px-4 py-2 rounded">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>Loading...</p> // Handle loading state
+        )}
       </div>
     </div>
   );
