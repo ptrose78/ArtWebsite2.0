@@ -1,27 +1,28 @@
+// app/actions.ts
+"use server"; 
+
 import { sql } from '@vercel/postgres';
 import { LatestArtRaw } from '@/app/lib/definitions';
-import { formatCurrency } from '@/app/lib/utils';
+import { neon } from "@neondatabase/serverless";
+import { formatCurrency } from "@/app/lib/utils";
 
 export async function fetchArts() {
-    try {
-       // Access the environment variable for the PostgreSQL URL
-       const connectionString = process.env.POSTGRES_URL;
+  try {
+    // Initialize the Neon SQL connection
+    const sql = neon(process.env.POSTGRES_URL); 
 
-       if (!connectionString) {
-        throw new Error('POSTGRES_URL is not defined.');
-       }
-  
-        const data = await sql `SELECT * FROM arts`;
-        console.log(data)
+    // Fetch data from the "arts" table
+    const rows  = await sql`SELECT * FROM arts`;
 
-        const arts = data.rows.map((art) => ({
-            ...art,
-            art: formatCurrency(art.price),
-          }));
+    // Format the data
+    const arts = rows.map((art) => ({
+      ...art,
+      priceFormatted: formatCurrency(art.price), // Ensure `formatCurrency` is implemented correctly.
+    }));
 
-        return arts;
-    } catch (error) {
-        console.error('Database Error:', error);
-        throw new Error ('Failed to fetch arts.')
-    }
+    return arts;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch arts.");
+  }
 }

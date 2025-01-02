@@ -1,11 +1,24 @@
 // pages/index.tsx
+'use client'
 import Layout from "@/app/layout";
 import Link from 'next/link';
 import Image from 'next/image';
+import { fetchArts } from '@/app/lib/data'
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-  return (
-    
+  const [arts, setArts] = useState([]);
+
+  useEffect(() => {
+    async function getArts() {
+      const data = await fetchArts();
+      setArts(data);
+    }
+
+    getArts();
+  }, []);
+
+  return (  
       <div>
        {/* Hero Section */}
        <section
@@ -35,13 +48,14 @@ export default function Home() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Artwork Card */}
-          {[1, 2, 3, 4, 5, 6].map((art) => (
+          {arts.map((art) => 
+            art.featured === "true" ? (
             <div
-              key={art}
+              key={art.id}
               className="bg-white border border-gray-200 rounded-lg overflow-hidden"
             >
-              <Image
-                src={`/art${art}.jpg`}
+              <img
+                src={art.image_url || "/placeholder.jpg"}
                 alt={`Artwork ${art}`}
                 width={500}
                 height={500}
@@ -49,15 +63,13 @@ export default function Home() {
               />
               <div className="p-4">
                 <h3 className="text-lg sm:text-xl font-semibold">
-                  Artwork Title {art}
+                  Artwork Title {art.title}     
                 </h3>
-                <p className="text-gray-600">$500</p>
-                <a href={`/art/${art}`} className="text-teal-500 hover:underline text-sm">
-                  Learn More
-                </a>
+                <p className="text-gray-600">{`$${art.price}`}</p>
               </div>
             </div>
-          ))}
+            ) : null
+          )}
         </div>
       </section>
 

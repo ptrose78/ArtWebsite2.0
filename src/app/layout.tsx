@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Head>
-            <title>{metadata.title}</title>
+            <title>Art Business</title>
             <meta name="description" content={metadata.description} />
           </Head>
 

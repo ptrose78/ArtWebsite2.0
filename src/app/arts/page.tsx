@@ -2,7 +2,7 @@
 
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import { addToCart } from '../../store/features/cartSlice'; // Path to your cart slice
+import { addToCart, calculateTotalPrice } from '../../store/features/cartSlice'; // Path to your cart slice
 import { useState, useEffect } from 'react';
 import { fetchArts } from '@/app/lib/data'; // Assuming this is a client-side data fetching function
 
@@ -20,9 +20,9 @@ export default function GalleryPage() {
     getArts(); // Call the function to fetch the data
   }, []); // Empty dependency array means this runs only once when the component mounts
 
-  const handleAddToCart = (art: any) => {
-    dispatch(addToCart(art)); // Dispatch action to add to cart
-    router.push('/cart'); // Navigate to the cart page after adding the item
+  async function handleAddToCart(art: any) {
+      await dispatch(addToCart(art)); // Dispatch action to add to cart
+      router.push('/cart'); // Navigate to the cart page after adding the item
   };
 
   return (
