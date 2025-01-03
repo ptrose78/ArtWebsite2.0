@@ -1,34 +1,57 @@
-
-import { revalidatePath } from "next/cache";
+'use client';
+import React, { useState, FormEvent } from 'react';
 
 export default function Contact() {
-  async function handleSubmit(data: FormData) {
-    "use server"; // Enable server action
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const name = data.get("name")?.toString() || "";
-    const email = data.get("email")?.toString() || "";
-    const message = data.get("message")?.toString() || "";
-
-    if (!name || !email || !message) {
-      throw new Error("All fields are required.");
+    function formDataToObject(formData: FormData) {
+        const obj: Record<string, any> = {};
+        formData.forEach((value, key) => {
+            obj[key] = value;
+        });
+        return obj;
     }
+    
+    async function onSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setIsLoading(true);
+        setError(null); // Clear previous errors when a new request starts
+     
+        try {
+          const formData = new FormData(event.currentTarget);
+          
+          // Log each entry in the FormData
+          const formObject = formDataToObject(formData);
+          console.log(formObject); // Logs all form data as a plain object
 
-    // Simulate a backend process (e.g., send an email or save to a database)
-    console.log("Contact form submitted:", { name, email, message });
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formObject),
+          })
 
-    // Optional: Trigger revalidation of paths
-    revalidatePath("/");
-  }
+          if (!response.ok) {
+            throw new Error('Failed to submit the data. Please try again.')
+          }
+     
+          // Handle response if necessary
+          const data = await response.json();
+          console.log(data)
+          
+      } catch (error) {
+          // Capture the error message to display to the user
+          setError(error.message);
+          console.error(error);
+      } finally {
+          setIsLoading(false);
+        }
+      }
 
   return (
     <div className="max-w-lg mx-auto p-4">
       <h1 className="text-3xl font-bold text-center mb-6">Contact Us</h1>
-      <form
-        action={handleSubmit}
-        className="space-y-4"
-        method="post"
-        encType="multipart/form-data"
-      >
+      <form onSubmit={onSubmit}>
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Name

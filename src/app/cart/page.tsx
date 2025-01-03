@@ -1,6 +1,7 @@
 'use client'
 import { selectCart } from '../../store/features/cartSlice';
 import { useSelector } from 'react-redux';
+import Link from 'next/link';
 
 export default function Page() {
     const cart = useSelector(selectCart);
@@ -27,7 +28,7 @@ export default function Page() {
                             <div className="flex items-center">
                                 <img
                                     src={item.image_url || '/placeholder.jpg'}
-                                    alt={`Image of ${item.name}`}
+                                    alt={`Image of ${item.title}`}
                                     className="w-16 h-16 object-cover mr-4"
                                 />
                             </div>
@@ -51,9 +52,11 @@ export default function Page() {
 
                 {/* Checkout Button */}
                 <div className="mt-6 flex justify-center">
+                    <Link href={'/checkout'}>
                     <button className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 focus:outline-none">
                         Proceed to Checkout
                     </button>
+                    </Link>
                 </div>
             </section>
         </div>

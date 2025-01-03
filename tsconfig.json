@@ -2,7 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/app/*": ["src/app/*"]
+      "@/app/*": ["src/app/*"],
+      "typeRoots": [
+        "node_modules/@types"
+      ]
     },
     "target": "es5",
     "lib": [

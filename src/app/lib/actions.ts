@@ -63,3 +63,4 @@ export async function createArt(prev: State, formData: FormData) {
     redirect('/art');
 
 }
+

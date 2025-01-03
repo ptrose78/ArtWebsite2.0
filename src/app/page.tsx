@@ -22,7 +22,7 @@ export default function Home() {
       <div>
        {/* Hero Section */}
        <section
-        className="relative bg-cover bg-center h-[400px] sm:h-[500px] lg:h-[600px]"
+        className="relative w-full bg-cover bg-center h-[250px] sm:h-[300px] lg:h-[400px]"
         style={{ backgroundImage: 'url(/hero-image.jpg)' }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -31,10 +31,10 @@ export default function Home() {
             Discover Unique Art for Your Space
           </h1>
           <p className="text-sm sm:text-lg mb-8">
-            Handcrafted, original art pieces created by local artists.
+            Handcrafted, original art pieces
           </p>
           <a
-            href="/shop"
+            href="/arts"
             className="bg-teal-500 text-white py-2 px-6 rounded-full hover:bg-teal-600 text-sm sm:text-base"
           >
             Explore Our Collection
