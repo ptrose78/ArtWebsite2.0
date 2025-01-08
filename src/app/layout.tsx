@@ -3,11 +3,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { Provider } from 'react-redux';
 import { store } from '../store/store'; // Path to your Redux store
 import Head from 'next/head';
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,21 @@ const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const [squareLoaded, setSquareLoaded] = useState(false);
+
+  useEffect(() => {
+    if (squareLoaded) {
+      // Only initialize Square once SDK is fully loaded
+      const initializeSquare = async () => {
+        console.log('Square SDK script loaded.');
+        if (window.Square) {
+          // You can initialize your Square logic here (payment form, etc.)
+        }
+      };
+      initializeSquare();
+    }
+  }, [squareLoaded]);
+
   return (
     <Provider store={store}>
       <html lang="en">
@@ -86,6 +102,13 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
             </div>
           </footer>
+           {/* Add the Square SDK script and handle its load event */}
+           <Script
+            src="https://sandbox.web.squarecdn.com/v1/square.js"
+            strategy="beforeInteractive"
+            onLoad={() => setSquareLoaded(true)} // Mark Square as loaded once the script loads
+            onError={(e) => console.error('Failed to load Square SDK:', e)}
+          />
         </body>
       </html>
     </Provider>

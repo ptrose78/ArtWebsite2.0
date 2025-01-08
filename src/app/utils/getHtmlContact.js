@@ -1,4 +1,4 @@
-const getEmailTemplate = (name, message, email) => 
+const getHtmlContact = (name, message, email) => 
     `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -75,4 +75,4 @@ const getEmailTemplate = (name, message, email) =>
     </html>
     `;
     
-    module.exports = getEmailTemplate;
+    module.exports = getHtmlContact;

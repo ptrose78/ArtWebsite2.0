@@ -1,12 +1,107 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCart } from '../../store/features/cartSlice';
 
-export default function CheckoutForm() {
-  const cart = useSelector(selectCart);
+function formDataToObject(formData: FormData) {
+  const obj: Record<string, any> = {};
+  formData.forEach((value, key) => {
+      obj[key] = value;
+  });
+  return obj;
+}
 
+export default function CheckoutForm() {
+    const [card, setCard] = useState<any>(null);
+    const cart = useSelector(selectCart);
+  
+    const appId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID!;
+    const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!;
+  
+    useEffect(() => {
+      //load Square Web Payments SDK
+      console.log('rerender inside useEffect')
+      const loadSquare = async () => {
+        if (!window.Square) {
+          return;
+        }
+  
+        //initialize payments
+        const payments = window.Square.payments(appId, locationId);
+        console.log(payments)
+  
+        if (!payments) {
+          return;
+        }
+  
+        try {
+          const card = await payments.card();
+          console.log(card)
+          await card.attach('#card-container'); // Attach to React-rendered div
+          setCard(card);
+        } catch (err) {
+        }
+      };
+  
+      loadSquare();
+    }, []);
+  
+    const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {
+      console.log('handlePAYMENTs')
+      e.preventDefault(); // Prevents the form from refreshing the page
+
+      if (!card) {
+        alert("Card element not initialized.");
+        return;
+      }
+           
+      const formData = new FormData(e.currentTarget);
+      const formObject = formDataToObject(formData);
+      const email = formData.get("email");
+      
+      console.log(email)
+  
+      try {
+        console.log('try in handle payment')
+
+        //Handle payment
+        const result = await card.tokenize();
+        console.log(result.status)
+        if (result.status === "OK") {
+          const responsePayment = await fetch("/api/square", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: result.token, cart }),
+          });
+  
+          const dataPayment = await responsePayment.json();
+          console.log("dataPayment", dataPayment)
+          console.log("success")
+
+        //Handle receipt
+        if (dataPayment.message === "OK") {
+          const responseReceipt = await fetch("/api/receipt", {
+            method: "POST",
+            headers: { "Content-Type": "appication/json"},
+            body: JSON.stringify({email, cart})
+          })
+          const dataReceipt = await responseReceipt.json();
+          console.log("dataReceipt:", dataReceipt)
+        }
+        else {
+          alert("Payment failed: " + result.errors[0].detail);
+        }
+      }
+      } catch (error) {
+        console.error("Payment error: ", error);
+        alert("An error occurred during payment.");
+      }
+    };
+
+  const [emailAddress, setEmailAddress] = useState({
+    email: ''
+  });
   const [billingAddress, setBillingAddress] = useState({
     address: '',
     city: '',
@@ -31,6 +126,14 @@ export default function CheckoutForm() {
     }
   };
 
+  const handleEmailChange = (e) => {
+    const { name, value } = e.target;
+    setEmailAddress((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
   const handleBillingChange = (e) => {
     const { name, value } = e.target;
     setBillingAddress((prev) => ({
@@ -54,12 +157,23 @@ export default function CheckoutForm() {
     }));
   };
 
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-bold mb-4">Checkout</h2>
-      <form>
+      <form onSubmit={handleCheckout}>
         {/* Billing Information */}
         <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-2">Email Address</h3>
+          <input
+            type="email"
+            name="email"
+            value={emailAddress.address}
+            onChange={handleEmailChange}
+            placeholder="email address (To receive receipt)"
+            required
+            className="mb-3 p-2 border border-gray-300 rounded-md w-full"
+            />
           <h3 className="text-lg font-semibold mb-2">Billing Address</h3>
           <input
             type="text"
@@ -171,15 +285,22 @@ export default function CheckoutForm() {
                 </li>
                 )}
                 <p className="text-gray-700 font-bold mt-10">Total: {`$${cart.totalPrice}`}</p>
+        </div>
+        <div>
+          <div>
+          <p className="mb-5 text-center">All transactions are secure and encrypted.</p>
+            <div id="card-container"></div>
+            {/* The Square card element will be injected here */}
           </div>
-      
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-teal-500 text-white py-2 px-4 rounded-md w-full hover:bg-teal-600"
-          >
-            Place Order
-          </button>
+            
+            {/* Submit Button */}
+            <button
+              disabled={!card}
+              type="submit"
+              className="bg-teal-500 text-white py-2 px-4 rounded-md w-full hover:bg-teal-600">
+                Place Order
+            </button>         
+        </div>
       </form>
     </div>
   );

@@ -7,7 +7,7 @@
         "node_modules/@types"
       ]
     },
-    "target": "es5",
+    "target": "ES2020",  // Change this to ES2020 or later
     "lib": [
       "dom",
       "dom.iterable",

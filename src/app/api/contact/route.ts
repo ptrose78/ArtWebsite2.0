@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as SibApiV3Sdk from "@sendinblue/client";
-import getEmailTemplate from "@/app/utils/getEmailTemplate"
+import getHtmlContact from "@/app/utils/getHtmlContact"
+import { Carter_One } from 'next/font/google';
 
 export async function POST(req: Request) {
   console.log('post request received')
@@ -14,7 +15,8 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const htmlContent = getEmailTemplate(name, message, email);
+    
+    const htmlContact = getHtmlContact(name, message, email);
 
     const client = new SibApiV3Sdk.TransactionalEmailsApi();
     client.setApiKey(
@@ -26,7 +28,7 @@ export async function POST(req: Request) {
       sender: { name: name, email: "paultrose1@gmail.com" },
       to: [{ email: "paultrose1@gmail.com" }], // Correct format
       subject: "Art Website: Contact Message",
-      htmlContent: htmlContent,
+      htmlContent: htmlContact,
     };    
 
     const response = await client.sendTransacEmail(content);
