@@ -26,3 +26,35 @@ export async function fetchArts() {
     throw new Error("Failed to fetch arts.");
   }
 }
+
+export async function deleteArts(cart) {
+  try {
+    if (!Array.isArray(cart.items) || cart.items.length === 0) {
+      throw new Error("Cart is empty or not an array")
+    }
+    const sql = neon(process.env.POSTGRES_URL);
+
+  // Extract the IDs from `cart.items`
+  const itemIds = cart.items.map((item) => item.id);
+
+   // Generate a query with parameterized placeholders for the IDs
+   const placeholders = itemIds.map((_, index) => `$${index + 1}`).join(", ");
+   const query = `DELETE FROM arts WHERE id IN (${placeholders}) RETURNING id`;
+
+   // Execute the query with the cart as the parameters
+   const result = await sql(query, itemIds);
+
+    if (result.length === 0) {
+      throw new Error("No items in the cart were found for deletion.");
+    }
+
+    return { 
+      success: true,
+      message: `Successfully deleted ${result.length} items.`,
+      deletedIds: result.map((row: { id: string }) => row.id), // Return IDs of deleted items
+    };
+  } catch(error) {
+    console.error("Database error", error);
+    throw new Error("Failed to delete the art.");
+  }
+}

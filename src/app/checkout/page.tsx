@@ -3,6 +3,8 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCart } from '../../store/features/cartSlice';
+import Link from 'next/link';
+import { deleteArts } from '@/app/lib/data'; 
 
 function formDataToObject(formData: FormData) {
   const obj: Record<string, any> = {};
@@ -66,7 +68,6 @@ export default function CheckoutForm() {
       }
   
       try {
-        console.log('try in handle payment')
 
         //Handle payment
         const result = await card.tokenize();
@@ -79,10 +80,7 @@ export default function CheckoutForm() {
           });
   
           const dataPayment = await responsePayment.json();
-          console.log("dataPayment", dataPayment)
-          console.log("success")
           
-
         //Handle receipt
         if (dataPayment.message === "OK") {
           setPaymentStatus("SUCCESS Charge");
@@ -91,8 +89,8 @@ export default function CheckoutForm() {
             headers: { "Content-Type": "application/json"},
             body: JSON.stringify(payload)
           })
-          const dataReceipt = await responseReceipt.json();
-          console.log("dataReceipt:", dataReceipt)
+
+          const responseDeleteArts = await deleteArts(cart); 
         }
         else {
           alert("Payment failed: " + result.errors[0].detail);
@@ -347,11 +345,14 @@ export default function CheckoutForm() {
                 Place Order
             </button>
             {paymentStatus && (
-            <div className={`p-4 rounded-lg text-white mt-3 text-center ${paymentStatus === 'SUCCESS Charge' ? 'bg-forestGreen border-green-800' : 'bg-red-500 border-red-600'}`}>
+            <div className="text-white mt-3 text-center">
               {paymentStatus === 'SUCCESS Charge' ? (
-                <p>You successfully paid. Your receipt has been emailed to you. Check your spam folder if necessary.</p>
+                <div>
+                <p className="bg-forestGreen mb-4 p-2 rounded-md border-green-800">You successfully paid. Your receipt has been emailed to you. Check your spam folder if necessary.</p>
+                <Link href='/arts' className="bg-teal-500 p-2 mt-4 rounded-md"><button>Return to Gallery</button></Link>
+                </div>
               ) : (
-                <p>Sorry, your payment did not process. Review your credit card information and try again.</p>
+                <p className="bg-red-500 border-red-600">Sorry, your payment did not process. Review your credit card information and try again.</p>
               )}
             </div>
           )}     

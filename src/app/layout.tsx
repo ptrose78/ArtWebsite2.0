@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store'; // Path to your Redux store
 import Head from 'next/head';
 import Script from 'next/script';
+import CartIcon from '@/app/components/cartIcon';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,6 +78,11 @@ export default function Layout({ children }: { children: ReactNode }) {
                   <li>
                     <Link href="/contact" className="text-gray-700 hover:text-gray-900">
                       Contact
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/cart">
+                      <CartIcon />
                     </Link>
                   </li>
                 </ul>

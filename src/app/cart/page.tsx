@@ -1,10 +1,16 @@
 'use client'
-import { selectCart } from '../../store/features/cartSlice';
-import { useSelector } from 'react-redux';
+import { selectCart, removeFromCart } from '../../store/features/cartSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 
 export default function Page() {
     const cart = useSelector(selectCart);
+    const dispatch = useDispatch();
+
+    function handleDelete(item) {
+        console.log('delete')
+        dispatch(removeFromCart(item.id));
+    }
 
     return (
         <div className="container mx-auto p-4">
@@ -15,10 +21,10 @@ export default function Page() {
 
             <section className="bg-white p-6 rounded-lg shadow-md">
                 {/* Table Header */}
-                <div className="grid grid-cols-3 gap-4 border-b pb-4 mb-4">
+                <div className="grid grid-cols-3 gap-1 border-b pb-2 mb-4">
                     <h2 className="text-lg font-semibold">Item</h2>
                     <h2 className="text-lg font-semibold">Title</h2>
-                    <h2 className="text-lg font-semibold text-right">Price</h2>
+                    <h2 className="text-lg font-semibold">Price</h2>
                 </div>
 
                 {/* Cart Items */}
@@ -35,9 +41,11 @@ export default function Page() {
                             <div className="text-left">
                                 <span className="text-lg font-semibold">{item.title}</span>
                             </div>
-                            <div className="text-right">
-                                <span className="text-lg font-semibold">${item.price}</span>
+                            <div className="text-left">
+                                <span className="text-lg font-semibold mr-2">${item.price}</span>
+                                <button className="bg-red-600 hover:bg-red-700 rounded-lg pl-2 pr-2 text-white text-lg" onClick={()=>handleDelete(item)}>x</button>
                             </div>
+                            
                         </div>
                     ))
                 ) : (
@@ -45,8 +53,8 @@ export default function Page() {
                 )}
 
                 {/* Total Price */}
-                <div className="flex justify-between mt-6 border-t pt-4">
-                    <span className="text-xl font-semibold">Total</span>
+                <div className="flex mt-6 border-t pt-4">
+                    <span className="text-xl font-semibold mr-2">Total:</span>
                     <span className="text-xl font-semibold">${cart.totalPrice}</span>
                 </div>
 

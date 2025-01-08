@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@neondatabase/serverless": "^0.10.4",
     "@reduxjs/toolkit": "^2.5.0",
     "@sendinblue/client": "^3.3.1",
