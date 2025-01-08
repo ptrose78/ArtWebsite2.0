@@ -6,16 +6,17 @@ import getHtmlReceipt from "@/app/utils/getHtmlReceipt"
 export async function POST(req) {
     try {
         console.log('post request received for sending receipt');
-        const { email, cart } = await req.json();
-        console.log('email:', email)
-        console.log(cart)
+        const { form, cart } = await req.json();
 
-        if (!cart) {
+        if (!form || !cart) {
             return NextResponse.json(
                 {success: false, error: "Missing request body"},
                 {status: 400}
             )
         }
+
+        console.log(form)
+        console.log(cart)
 
         const client = new SibApiV3Sdk.TransactionalEmailsApi();
             client.setApiKey(
@@ -23,11 +24,11 @@ export async function POST(req) {
               process.env.YOUR_API_V3_KEY
             );
         
-        const htmlReceipt = getHtmlReceipt(email, cart);
+        const htmlReceipt = getHtmlReceipt(form, cart);
         
         const content = {
             sender: {email: "paultrose1@gmail.com"},
-            to: [{email: email}, { email: "paultrose1@gmail.com" }],
+            to: [{email: form.email}, { email: "paultrose1@gmail.com" }],
             subject: "Art Website: Receipt",
             htmlContent: htmlReceipt
         }

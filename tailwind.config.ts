@@ -11,6 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        forestGreen: '#228B22', // Forest green hex code
       },
     },
   },

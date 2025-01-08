@@ -6,7 +6,7 @@ export default function About() {
         <section>
           <h2 className="text-2xl font-semibold mb-2">My Story</h2>
           <p>
-            Hi there! I'm [Your Name], the artist behind this small business. Creating art has
+            Hi there! I'm the artist behind this small business. Creating art has
             always been a passion of mine, and I'm thrilled to share my creations with you. What
             began as a personal hobby has blossomed into a journey of connecting with people through
             my work. Every piece I create carries a part of my story, my emotions, and my inspiration.

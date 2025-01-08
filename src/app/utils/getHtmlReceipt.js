@@ -1,4 +1,5 @@
-const getHtmlReceipt = (email, cart) => {
+const getHtmlReceipt = (form, cart) => {
+  
   // Generate HTML for cart items
   const itemsHtml = cart.items
     .map(
@@ -8,7 +9,7 @@ const getHtmlReceipt = (email, cart) => {
             <img src="${item.image_url}" alt="Artwork Image" style="max-width: 100px; display: block; margin: 0 auto;" />
           </td>
           <td style="padding: 10px; border: 1px solid #ddd; text-align: left;">${item.name || "Artwork"}</td>
-          <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${item.price}</td>
+          <td style="padding: 10px; border: 1px solid #ddd; text-align: left;">$${item.price}</td>
         </tr>
       `
     )
@@ -44,7 +45,7 @@ const getHtmlReceipt = (email, cart) => {
         }
         p {
           color: #555;
-          line-height: 1.6;
+          line-height: 1.2;
         }
         table {
           width: 100%;
@@ -63,7 +64,7 @@ const getHtmlReceipt = (email, cart) => {
           border: 1px solid #ddd;
         }
         .totals {
-          text-align: right;
+          text-align: left;
           margin-top: 20px;
           font-weight: bold;
           color: #333;
@@ -85,8 +86,6 @@ const getHtmlReceipt = (email, cart) => {
         <h2>Receipt</h2>
         <p>Thank you for your purchase! Below are the details of your order:</p>
 
-        <h3>Contact Email: ${email}</h3>
-
         <table>
           <thead>
             <tr>
@@ -104,8 +103,24 @@ const getHtmlReceipt = (email, cart) => {
           <p>Total Price: $${cart.totalPrice}</p>
         </div>
 
+        <h3>Your shipping address:</h3>
+        <p>
+          <span>${form.firstName} ${form.lastName}</span>
+        </p>
+        <p>
+          <a href="#" style="text-decoration: none; color: inherit; cursor: text;">${form.address}</a>
+        </p>
+        <p>
+          <a href="#" style="text-decoration: none; color: inherit; cursor: text;">${form.city} ${form.state} ${form.zip}</a>
+        </p>
+
+        <h3>Your contact information: </h3>
+        <p>
+          <a href="#" style="text-decoration: none; color: inherit; cursor: text;">${form.email}</a></span>
+        </p>
+        
         <div class="footer">
-          <p>If you have any questions about your order, feel free to <a href="mailto:${email}">contact us</a>.</p>
+          <p>If you have any questions about your order, feel free to <a href="/contact">contact us</a>.</p>
           <p>Thank you for supporting our art business!</p>
         </div>
       </div>

@@ -17,7 +17,7 @@ export async function POST(req) {
     const { token, cart } = body;
     
     // Convert dollars to cents and create a bigint
-    const amountInDollars = cart.price;
+    const amountInDollars = cart.totalPrice;
     const amountInCents = BigInt(Math.round(amountInDollars * 100)); // Crucial conversion and rounding
 
      // Check for required fields

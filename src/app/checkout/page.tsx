@@ -14,6 +14,7 @@ function formDataToObject(formData: FormData) {
 
 export default function CheckoutForm() {
     const [card, setCard] = useState<any>(null);
+    const [paymentStatus, setPaymentStatus] = useState('');
     const cart = useSelector(selectCart);
   
     const appId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID!;
@@ -58,9 +59,11 @@ export default function CheckoutForm() {
            
       const formData = new FormData(e.currentTarget);
       const formObject = formDataToObject(formData);
-      const email = formData.get("email");
-      
-      console.log(email)
+
+      const payload = {
+        form: formObject,
+        cart: cart
+      }
   
       try {
         console.log('try in handle payment')
@@ -78,19 +81,22 @@ export default function CheckoutForm() {
           const dataPayment = await responsePayment.json();
           console.log("dataPayment", dataPayment)
           console.log("success")
+          
 
         //Handle receipt
         if (dataPayment.message === "OK") {
+          setPaymentStatus("SUCCESS Charge");
           const responseReceipt = await fetch("/api/receipt", {
             method: "POST",
-            headers: { "Content-Type": "appication/json"},
-            body: JSON.stringify({email, cart})
+            headers: { "Content-Type": "application/json"},
+            body: JSON.stringify(payload)
           })
           const dataReceipt = await responseReceipt.json();
           console.log("dataReceipt:", dataReceipt)
         }
         else {
           alert("Payment failed: " + result.errors[0].detail);
+          setPaymentStatus("FAILED Charge");
         }
       }
       } catch (error) {
@@ -103,12 +109,16 @@ export default function CheckoutForm() {
     email: ''
   });
   const [billingAddress, setBillingAddress] = useState({
+    firstName: '',
+    lastName: '',
     address: '',
     city: '',
     state: '',
     zip: '',
   });
   const [shippingAddress, setShippingAddress] = useState({
+    firstName: '',
+    lastName: '',
     address: '',
     city: '',
     state: '',
@@ -122,7 +132,7 @@ export default function CheckoutForm() {
     if (isChecked) {
       setShippingAddress({ ...billingAddress });
     } else {
-      setShippingAddress({ address: '', city: '', state: '', zip: '' });
+      setShippingAddress({ firstName: '', lastName: '', address: '', city: '', state: '', zip: '' });
     }
   };
 
@@ -168,13 +178,31 @@ export default function CheckoutForm() {
           <input
             type="email"
             name="email"
-            value={emailAddress.address}
+            value={emailAddress.email}
             onChange={handleEmailChange}
             placeholder="email address (To receive receipt)"
             required
             className="mb-3 p-2 border border-gray-300 rounded-md w-full"
             />
           <h3 className="text-lg font-semibold mb-2">Billing Address</h3>
+          <input
+            type="text"
+            name="firstName"
+            value={billingAddress.firstName}
+            onChange={handleBillingChange}
+            placeholder="First Name"
+            required
+            className="mb-3 mr-2 p-2 border border-gray-300 rounded-md"
+          />
+          <input
+            type="text"
+            name="lastName"
+            value={billingAddress.lastName}
+            onChange={handleBillingChange}
+            placeholder="Last Name"
+            required
+            className="mb-3 p-2 border border-gray-300 rounded-md"
+            />
           <input
             type="text"
             name="address"
@@ -232,6 +260,24 @@ export default function CheckoutForm() {
         {!sameAsBilling && (
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Shipping Address</h3>
+            <input
+              type="text"
+              name="firstName"
+              value={shippingAddress.firstName}
+              onChange={handleShippingChange}
+              placeholder="First Name"
+              required
+              className="mb-3 mr-2 p-2 border border-gray-300 rounded-md"
+            />
+            <input
+              type="text"
+              name="lastName"
+              value={shippingAddress.lastName}
+              onChange={handleShippingChange}
+              placeholder="Last Name"
+              required
+              className="mb-3 p-2 border border-gray-300 rounded-md"
+            />
             <input
               type="text"
               name="address"
@@ -299,7 +345,16 @@ export default function CheckoutForm() {
               type="submit"
               className="bg-teal-500 text-white py-2 px-4 rounded-md w-full hover:bg-teal-600">
                 Place Order
-            </button>         
+            </button>
+            {paymentStatus && (
+            <div className={`p-4 rounded-lg text-white mt-3 text-center ${paymentStatus === 'SUCCESS Charge' ? 'bg-forestGreen border-green-800' : 'bg-red-500 border-red-600'}`}>
+              {paymentStatus === 'SUCCESS Charge' ? (
+                <p>You successfully paid. Your receipt has been emailed to you. Check your spam folder if necessary.</p>
+              ) : (
+                <p>Sorry, your payment did not process. Review your credit card information and try again.</p>
+              )}
+            </div>
+          )}     
         </div>
       </form>
     </div>
