@@ -4,6 +4,7 @@ import React, { useState, FormEvent } from 'react';
 export default function Contact() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [submissionStatus, setSubmissionStatus] = useState("");
 
     function formDataToObject(formData: FormData) {
         const obj: Record<string, any> = {};
@@ -33,11 +34,12 @@ export default function Contact() {
 
           if (!response.ok) {
             throw new Error('Failed to submit the data. Please try again.')
+          } else {
+            setSubmissionStatus("SUCCESS");
           }
      
           // Handle response if necessary
           const data = await response.json();
-          console.log(data)
           
       } catch (error) {
           // Capture the error message to display to the user
@@ -91,11 +93,18 @@ export default function Contact() {
         <div>
           <button
             type="submit"
-            className="w-full bg-teal-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-teal-600 focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+            className="mb-2 w-full bg-teal-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-teal-600 focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
           >
             Submit
           </button>
         </div>
+        {submissionStatus && (
+          submissionStatus === "SUCCESS" ? 
+          <p className="text-center py-2 px-4 bg-forestGreen text-white rounded-md shadow-sm">
+            The contact form was successfully submitted. We will get back to you in 1-2 business days.
+          </p>
+          : <p className="text-center py-2 px-4 bg-red text-white rounded-md shadow-sm">The contact form failed to submit. Please try again. Thank you.</p>
+        )}
       </form>
     </div>
   );

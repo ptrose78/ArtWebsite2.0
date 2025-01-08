@@ -26,6 +26,7 @@ const getHtmlContact = (name, message, email) =>
         }
         p {
           color: #555;
+          line-height: 1.1;
         }
         .details, .totals {
           margin-top: 20px;
@@ -69,8 +70,9 @@ const getHtmlContact = (name, message, email) =>
     <body>
       <div class="email-container">
         <h3>Contact Message:</h3>
-        <h3>${message}</h3>
-        <h3>From: ${name} ${email}</h3>
+        <p mb-3>${message}</p>
+        <p>From: ${name}</p>
+        <a href="#" style="text-decoration: none; color: inherit; cursor: text;">${email}</a>
     </body>
     </html>
     `;
