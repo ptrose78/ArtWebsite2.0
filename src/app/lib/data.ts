@@ -93,3 +93,25 @@ export async function fetchBlogById(id: number) {
     throw new Error("Failed to retrieve the blog post.");
   }
 }
+
+export async function addBlog(blog){
+  try {
+    if (!blog.title) {
+      throw new Error("Blog title and content are required.");
+    }
+
+    const sql = neon(process.env.POSTGRES_URL);
+    const [result] = await sql`
+      INSERT INTO blogs (title)
+      VALUES (${blog.title})
+      RETURNING id`
+
+      return {
+        success: true,
+        message: "Blog submitted successfully."
+      }
+  } catch(error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to add the blog post.");
+  }
+}
