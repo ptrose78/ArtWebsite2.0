@@ -58,3 +58,38 @@ export async function deleteArts(cart) {
     throw new Error("Failed to delete the art.");
   }
 }
+
+export async function addCustomers(email) {
+  try {
+    const sql = neon(process.env.POSTGRES_URL);
+
+    const result = await sql`
+    INSERT INTO customers (email)
+    VALUES (${email})
+    RETURNING id`;
+
+    return {
+      success: true,
+      customerId: result[0].id
+    }
+  } catch(error) {
+    throw new Error("Failed to add customer to database.")
+  }
+}
+
+
+export async function fetchBlogById(id: number) {
+  try {
+
+    const sql = neon(process.env.POSTGRES_URL);
+
+    const blog = await sql`
+    SELECT * FROM blogs WHERE id = ${id} LIMIT 1`;
+
+    return blog[0] || null;
+
+  } catch(error){
+    console.error("Database Error:", error);
+    throw new Error("Failed to retrieve the blog post.");
+  }
+}

@@ -5,7 +5,6 @@ import getHtmlReceipt from "@/app/utils/getHtmlReceipt"
 
 export async function POST(req) {
     try {
-        console.log('post request received for sending receipt');
         const { form, cart } = await req.json();
 
         if (!form || !cart) {
@@ -14,9 +13,6 @@ export async function POST(req) {
                 {status: 400}
             )
         }
-
-        console.log(form)
-        console.log(cart)
 
         const client = new SibApiV3Sdk.TransactionalEmailsApi();
             client.setApiKey(

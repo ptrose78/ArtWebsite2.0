@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store'; // Path to your Redux store
 import Head from 'next/head';
 import Script from 'next/script';
-import CartIcon from '@/app/components/cartIcon';
+import CartIcon from '@/app/components/CartIcon';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,35 +58,42 @@ export default function Layout({ children }: { children: ReactNode }) {
                   ArtBusiness
                 </Link>
               </div>
-              <nav>
-                <ul className="flex space-x-4 sm:space-x-6">
-                  <li>
-                    <Link href="/" className="text-gray-700 hover:text-gray-900">
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/about" className="text-gray-700 hover:text-gray-900">
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/arts" className="text-gray-700 hover:text-gray-900">
-                      Gallery
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/contact" className="text-gray-700 hover:text-gray-900">
-                      Contact
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/cart">
-                      <CartIcon />
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
+              <div className="nav-container ml-2 justify-between items-center">
+                <div className="flex">
+                  <Link href="/cart" className="ml-auto">
+                    <CartIcon />
+                  </Link>
+                </div>
+                <nav>
+                  <ul className="flex space-x-3 sm:space-x-6">
+                    <li>
+                      <Link href="/" className="text-gray-700 hover:text-gray-900">
+                        Home
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/about" className="text-gray-700 hover:text-gray-900">
+                        About
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/arts" className="text-gray-700 hover:text-gray-900">
+                        Gallery
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog" className="text-gray-700 hover:text-gray-900">
+                        Blogs
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/contact" className="text-gray-700 hover:text-gray-900">
+                        Contact
+                      </Link>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </header>
 

@@ -3,11 +3,14 @@
 import Layout from "@/app/layout";
 import Link from 'next/link';
 import Image from 'next/image';
-import { fetchArts } from '@/app/lib/data'
+import { fetchArts, addCustomers } from '@/app/lib/data'
 import { useEffect, useState } from 'react';
+
 
 export default function Home() {
   const [arts, setArts] = useState([]);
+  const [email, setEmail] = useState('');
+  const [successSubmit, setSuccessSubmit] = useState(false);
 
   useEffect(() => {
     async function getArts() {
@@ -17,6 +20,14 @@ export default function Home() {
 
     getArts();
   }, []);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const response = await addCustomers(email);
+    if (response.success) {
+      setSuccessSubmit(true)
+    }
+  }
 
   return (  
       <div>
@@ -98,11 +109,13 @@ export default function Home() {
         <p className="text-sm sm:text-lg mb-6">
           Sign up for exclusive offers and new art arrivals!
         </p>
-        <form className="flex flex-col sm:flex-row justify-center items-center gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <input
             type="email"
             placeholder="Enter your email"
             className="p-2 rounded-lg text-black w-full sm:w-1/2 lg:w-1/3"
+            value={email}
+            onChange={(e)=> setEmail(e.target.value)}
           />
           <button
             type="submit"
@@ -111,6 +124,7 @@ export default function Home() {
             Join Now
           </button>
         </form>
+        {successSubmit && <p className="mt-5 text-white">You have been added to our email list!</p>}
       </section>
       </div>
   );

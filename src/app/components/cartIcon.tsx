@@ -8,7 +8,7 @@ export default function CartIcon() {
     const cart = useSelector(selectCart);
 
     return (
-        <div className="relative flex items-start ">
+        <div className="flex items-start">
             <div className="text-sm font-semibold">${cart.totalPrice}</div>
             <div className="w-5 h-5 text-teal-500">
                 <ShoppingCartIcon />
