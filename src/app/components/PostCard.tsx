@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 
-export default function BlogCard({post}) {
+export default function PostCard({post}) {
     return (
         <div>    
             <div>

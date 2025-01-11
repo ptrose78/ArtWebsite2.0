@@ -1,17 +1,17 @@
+import { fetchPostById } from "@/app/lib/data";
+import { notFound } from "next/navigation";
+import PostContent from "@/app/components/PostContent";
 
-import {fetchBlogById} from "@/app/lib/data"
+export default async function PostPage({ params }: { params: { id: string } }) {
+    const post = await fetchPostById(Number(params.id));
 
-export default async function BlogPost({params}: { params: { id: string } }) {
-    
-    // Route -> /blog/[id]
-    // URL -> /blog/1 (different requests from BlogCard)
-    // `params` -> { id: '1' }
-    const blog = await fetchBlogById(Number(params.id));
-    
-    return(
-        <div>
-            <h2>{blog.title}</h2>
-            <p>{blog.content}</p>
-        </div>
-    )
+    if (!post) {
+        notFound();
+    }
+
+    return (
+        <>
+            <PostContent title={post.title} content={post.content} />
+        </>
+    );
 }

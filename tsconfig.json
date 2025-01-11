@@ -2,12 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/app/*": ["src/app/*"],
+      "@/app/*": [
+        "src/app/*"
+      ],
       "typeRoots": [
         "node_modules/@types"
       ]
     },
-    "target": "ES2020",  // Change this to ES2020 or later
+    "target": "ES2020", // Change this to ES2020 or later
     "lib": [
       "dom",
       "dom.iterable",
@@ -28,7 +30,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "strictNullChecks": true
   },
   "include": [
     "**/*.ts",
@@ -36,7 +39,8 @@
     "next-env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/pages/api/revalidate.js"
   ],
   "exclude": [
     "node_modules"

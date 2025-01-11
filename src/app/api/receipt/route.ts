@@ -22,6 +22,9 @@ export async function POST(req) {
         
         const htmlReceipt = getHtmlReceipt(form, cart);
         
+        //Note: The sender email is setup inside of Brevo.com. This
+        //allows an email to be sent from the chosen email 
+        // using the Brevo API
         const content = {
             sender: {email: "paultrose1@gmail.com"},
             to: [{email: form.email}, { email: "paultrose1@gmail.com" }],
