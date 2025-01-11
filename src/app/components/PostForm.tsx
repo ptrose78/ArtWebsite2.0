@@ -22,7 +22,9 @@ interface Post {
     id?: number;
     title?: string;
     content?: string; // Store content as raw JSON string
+    excerpt?: string;
     featured?: boolean;
+    archived?: boolean;
 }
 
 export default function PostForm({ initialPost }: { initialPost?: Post }) {
@@ -100,7 +102,19 @@ export default function PostForm({ initialPost }: { initialPost?: Post }) {
                     />
                 </div>
                 <div>
-                    <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                        Post Excerpt
+                    </label>
+                    <input
+                        type="text"
+                        name="excerpt"
+                        placeholder="Excerpt"
+                        onChange={handlePostChange}
+                        value={post.excerpt || ""}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        required
+                    />
+                    <label htmlFor="content" className="block mt-3 text-sm font-medium text-gray-700">
                         Post Content
                     </label>
                     <div className="mt-2 space-x-2">
@@ -151,24 +165,27 @@ export default function PostForm({ initialPost }: { initialPost?: Post }) {
             {status && (
                 <div>
                     <p className="mt-4 text-sm text-gray-600">{status}</p>
-                    <Link href="/admin/blog" className="mt-4 text-sm text-gray-500 hover:text-gray-700 flex items-center">
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="w-4 h-4 mr-1"
-    >
-        <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M3 10.5l7.5-7.5m0 0L18 10.5m-7.5-7.5V21"
-        />
-    </svg>
-    Return to Main Page
-</Link>
+                    
                 </div>
+            )}
+            {(status && post.id) && (
+                <Link href="/admin/blog" className="mt-4 text-sm text-gray-500 hover:text-gray-700 flex items-center">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4 mr-1"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 10.5l7.5-7.5m0 0L18 10.5m-7.5-7.5V21"
+                    />
+                </svg>
+                Return to Main Page
+                </Link>
             )}
         </div>
     );

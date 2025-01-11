@@ -103,8 +103,8 @@ export async function createPost(post){
 
     const sql = neon(process.env.POSTGRES_URL);
     const [result] = await sql`
-      INSERT INTO posts (title, content, featured)
-      VALUES (${post.title}, ${post.content}, ${post.featured})
+      INSERT INTO posts (title, content, featured, excerpt)
+      VALUES (${post.title}, ${post.content}, ${post.featured}, ${post.excerpt})
       RETURNING id`
 
       revalidatePath("/admin/blog")
@@ -133,7 +133,7 @@ export async function fetchPosts() {
   }
 }
 
-export async function updatePost(id: number, post: { title?: string; content?: string; featured?: boolean; archived?: boolean }) {
+export async function updatePost(id: number, post: { title?: string; content?: string; featured?: boolean; excerpt?: string; archived?: boolean }) {
   try {
       const sql = neon(process.env.POSTGRES_URL);
 
@@ -156,8 +156,13 @@ export async function updatePost(id: number, post: { title?: string; content?: s
         values.push(post.featured);
       }
 
+      if (post.excerpt !== undefined) {
+        updates.push('excerpt = $4');
+        values.push(post.excerpt);
+      }
+
       if (post.archived !== undefined) {
-        updates.push('archived = $4');
+        updates.push('archived = $5');
         values.push(post.archived);
       }
 
