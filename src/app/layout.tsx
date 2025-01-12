@@ -65,7 +65,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   </Link>
                 </div>
                 <nav>
-                  <ul className="flex space-x-3 sm:space-x-6">
+                <ul className="flex space-x-2 text-sm sm:space-x-6 sm:text-base">
                     <li>
                       <Link href="/" className="text-gray-700 hover:text-gray-900">
                         Home
