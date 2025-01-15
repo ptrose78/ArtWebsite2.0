@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store'; // Path to your Redux store
 import Head from 'next/head';
 import Script from 'next/script';
-import CartIcon from '@/app/components/CartIcon';
+// import CartIcon from '@/app/components/CartIcon';
 import { fetchMisc } from '@/app/lib/data'
 
 const geistSans = Geist({
