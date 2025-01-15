@@ -6,20 +6,42 @@ import Image from 'next/image';
 import { fetchArts, addCustomers } from '@/app/lib/data'
 import { useEffect, useState } from 'react';
 
+interface Art {
+  id: number | string; // Accepts both numbers and strings
+  image_url: string;
+  price: string;
+  title: string;
+  featured: string;
+}
 
 export default function Home() {
-  const [arts, setArts] = useState([]);
+  const [arts, setArts] = useState<Art[]>([]); 
   const [email, setEmail] = useState('');
   const [successSubmit, setSuccessSubmit] = useState(false);
 
   useEffect(() => {
-    async function getArts() {
-      const data = await fetchArts();
-      setArts(data);
+    // Define the async function inside the useEffect
+    const getArts = async (): Promise<Art[]> => {
+      const response = await fetch('/api/arts');
+      const data: Record<string, any>[] = await response.json();
+    
+      return data.map((item) => ({
+        id: item.id ?? 0, // Default to 0 if id is null/undefined
+        image_url: item.image_url ?? '',
+        price: item.price ?? '',
+        title: item.title ?? '',
+        featured: item.featured ?? ''
+      }));
     }
 
-    getArts();
-  }, []);
+    // Call the async function and set the state with the resolved data
+    const fetchData = async () => {
+      const artData = await getArts();  // Await the Promise to get the resolved data
+      setArts(artData);  // Now set the arts state with the resolved data
+    };
+
+    fetchData(); // Call the fetchData function inside useEffect
+  }, []); // Empty dependency array means this runs only once when the component mounts
 
   async function handleSubmit(e) {
     e.preventDefault();

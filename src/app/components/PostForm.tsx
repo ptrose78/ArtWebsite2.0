@@ -37,12 +37,13 @@ export default function PostForm({ initialPost }: { initialPost?: Post }) {
     const [status, setStatus] = useState('');
 
     const handlePostChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value, type, checked } = e.currentTarget;
+        const { name, value, type } = e.currentTarget;
 
         if (type === "checkbox") {
+            const isChecked = (e.currentTarget as HTMLInputElement).checked;
             setPost((prev) => ({
                 ...prev,
-                [name]: checked,
+                [name]: isChecked,
             }));
         } else {
             setPost((prev) => ({
@@ -71,7 +72,7 @@ export default function PostForm({ initialPost }: { initialPost?: Post }) {
                 postResponse = await updatePost(post.id, updatedPost);
             } else {
                 postResponse = await createPost(updatedPost);
-                setPost({ id: '', title: '', content: '', featured: false });
+                setPost({ id: 0, title: '', content: '', featured: false });
                 setEditorState(EditorState.createEmpty());
             }
 

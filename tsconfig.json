@@ -41,7 +41,7 @@
     "src/**/*.tsx",
     ".next/types/**/*.ts",
     "src/pages/api/revalidate.js"
-, "src/app/components/Button/Button.test.js"  ],
+, "src/app/components/Button/Button.test.js", "src/app/api/contact/route.ts"  ],
   "exclude": [
     "node_modules"
   ]

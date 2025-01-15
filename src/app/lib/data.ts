@@ -10,6 +10,12 @@ import { revalidatePath } from 'next/cache';
 export async function fetchMisc() {
   try {
     // Initialize the Neon SQL connection
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL); 
 
     // Fetch data from the "arts" table
@@ -25,16 +31,22 @@ export async function fetchMisc() {
 export async function fetchArts() {
   try {
     // Initialize the Neon SQL connection
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL); 
 
     // Fetch data from the "arts" table
-    const rows  = await sql`SELECT * FROM arts`;
+    const arts  = await sql`SELECT * FROM arts`;
 
     // Format the data
-    const arts = rows.map((art) => ({
-      ...art,
-      priceFormatted: formatCurrency(art.price), // Ensure `formatCurrency` is implemented correctly.
-    }));
+    // const arts = rows.map((art) => ({
+    //   ...art,
+    //   priceFormatted: formatCurrency(art.price), // Ensure `formatCurrency` is implemented correctly.
+    // }));
 
     return arts;
   } catch (error) {
@@ -48,6 +60,13 @@ export async function deleteArts(cart) {
     if (!Array.isArray(cart.items) || cart.items.length === 0) {
       throw new Error("Cart is empty or not an array")
     }
+
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL);
 
   // Extract the IDs from `cart.items`
@@ -77,6 +96,12 @@ export async function deleteArts(cart) {
 
 export async function addCustomers(email) {
   try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL);
 
     const result = await sql`
@@ -96,6 +121,11 @@ export async function addCustomers(email) {
 
 export async function fetchPostById(id: number) {
   try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
 
     const sql = neon(process.env.POSTGRES_URL);
 
@@ -116,7 +146,14 @@ export async function createPost(post){
       throw new Error("Post title and content are required.");
     }
 
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL);
+
     const [result] = await sql`
       INSERT INTO posts (title, content, featured, excerpt)
       VALUES (${post.title}, ${post.content}, ${post.featured}, ${post.excerpt})
@@ -135,13 +172,17 @@ export async function createPost(post){
 
 export async function fetchPosts() {
   try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL);
     const posts = await sql`
       SELECT * FROM posts`
-
-      console.log(posts)
-      
      return posts
+        
   } catch(error) {
     console.error("Database error:", error);
     throw new Error("Failed to retrieve posts.");
@@ -150,6 +191,12 @@ export async function fetchPosts() {
 
 export async function updatePost(id: number, post: { title?: string; content?: string; featured?: boolean; excerpt?: string; archived?: boolean }) {
   try {
+      if (!process.env.POSTGRES_URL) {
+        const errorMessage = "Missing environmental variable."
+        console.error(errorMessage)
+        throw new Error(errorMessage);
+      }
+
       const sql = neon(process.env.POSTGRES_URL);
 
       // Construct the update query dynamically to only update provided fields
@@ -199,7 +246,7 @@ export async function updatePost(id: number, post: { title?: string; content?: s
 
       const result = await sql(query, values);
 
-      if (result.rowCount === 0) {
+      if (result.length  === 0) {
           return { success: false, message: "Post not found." }; // No rows updated, post probably doesn't exist
       }
 
@@ -213,12 +260,18 @@ export async function updatePost(id: number, post: { title?: string; content?: s
 
 export async function deletePost(post) {
   try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage)
+      throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL);
 
     const result = await sql`
     DELETE FROM posts WHERE id = ${post.id}
     `
-    if (result.rowCount === 0) {
+    if (result.length === 0) {
       return {
         success: false,
         message: "Post not found or already deleted.",

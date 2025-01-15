@@ -91,6 +91,12 @@ export async function handleLogin(prevState, formData: FormData) {
     
     const {username, password} = validatedFields.data;
 
+    if (!process.env.POSTGRES_URL) {
+        const errorMessage = "Missing environmental variable."
+        console.error(errorMessage)
+        throw new Error(errorMessage);
+    }
+
     const sql = neon(process.env.POSTGRES_URL);
 
     try {
@@ -124,11 +130,24 @@ const signupFormSchema = z.object({
 const HandleSignup = signupFormSchema.omit({id: true})
 
 async function fetchUserById(username:string) {
-    const sql = neon(process.env.POSTGRES_URL);
-    const result = await sql`
-    SELECT * FROM users WHERE username = ${username}
-    `;
-    return result.length > 0 ? result[0] : null;
+   
+    try {
+        if (!process.env.POSTGRES_URL) {
+            const errorMessage = "Missing environmental variable."
+            console.error(errorMessage)
+            throw new Error(errorMessage);
+        }
+
+        const sql = neon(process.env.POSTGRES_URL);
+        const result = await sql`
+        SELECT * FROM users WHERE username = ${username}
+        `;
+        return result.length > 0 ? result[0] : null;
+    
+    } catch(error) {
+        console.error("Database error:", error);
+        return { message: "Failed to fetch user.", status: 500 };
+    }
 }
 
 export async function handleSignup(formData: FormData) {
@@ -142,7 +161,13 @@ export async function handleSignup(formData: FormData) {
     }
     
     const {username, password} = validatedFields.data;
-    console.log(password)
+    
+
+    if (!process.env.POSTGRES_URL) {
+        const errorMessage = "Missing environmental variable."
+        console.error(errorMessage)
+        throw new Error(errorMessage);
+    }
 
     const sql = neon(process.env.POSTGRES_URL);
 

@@ -1,28 +1,34 @@
-import {handleSignup} from "@/app/lib/actions";
+'use client'
+import { useState } from 'react';
+import { handleSignup } from "@/app/lib/actions";
 
-export default async function Signup() {
+export default function Signup() {
+    const [message, setMessage] = useState("");
 
-    return(
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault(); // Prevent default form submission
+        const formData = new FormData(event.target as HTMLFormElement);
+        const result = await handleSignup(formData);
+        
+        if (result.status === 200) {
+            setMessage("User created successfully!");
+        } else {
+            setMessage(result.message || "An error occurred.");
+        }
+    };
+
+    return (
         <div>
-            <form action={handleSignup}>
-                <label className="mt-2"></label>
-                <input
-                    type="text"
-                    name="username"
-                    
-                    placeholder="username"
-                    required
-                />
-                <label className="mt-2"></label>
-                <input
-                    type="password"
-                    name="password"
-                   
-                    placeholder="password"
-                    required
-                />
-                <button>Submit</button>
+            <form onSubmit={handleSubmit}>
+                <label className="mt-2">Username</label>
+                <input type="text" name="username" required />
+
+                <label className="mt-2">Password</label>
+                <input type="password" name="password" required />
+
+                <button type="submit">Sign Up</button>
             </form>
+            {message && <div>{message}</div>}
         </div>
-    )
+    );
 }

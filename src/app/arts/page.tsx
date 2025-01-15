@@ -6,19 +6,40 @@ import { addToCart } from '../../store/features/cartSlice'; // Path to your cart
 import { useState, useEffect } from 'react';
 import { fetchArts } from '@/app/lib/data'; // Assuming this is a client-side data fetching function
 
+interface Art {
+  id: number | string; // Accepts both numbers and strings
+  image_url: string;
+  price: string;
+  title: string;
+}
+
 export default function GalleryPage() {
-  const [arts, setArts] = useState<any[]>([]); // Store fetched art data
+  const [arts, setArts] = useState<Art[]>([]); 
   const dispatch = useDispatch();
   const router = useRouter();
 
   useEffect(() => {
-    const getArts = async () => {
-      const data = await fetchArts(); // Fetch the arts data
-      setArts(data); // Set the arts data into state
-    };
+      // Define the async function inside the useEffect
+      const getArts = async (): Promise<Art[]> => {
+        const response = await fetch('/api/arts');
+        const data: Record<string, any>[] = await response.json();
+      
+        return data.map((item) => ({
+          id: item.id ?? 0, // Default to 0 if id is null/undefined
+          image_url: item.image_url ?? '',
+          price: item.price ?? '',
+          title: item.title ?? '',
+        }));
+      }
 
-    getArts(); // Call the function to fetch the data
-  }, []); // Empty dependency array means this runs only once when the component mounts
+      // Call the async function and set the state with the resolved data
+      const fetchData = async () => {
+        const artData = await getArts();  
+        setArts(artData);  
+
+      fetchData(); 
+    }
+  }, []); 
 
   async function handleAddToCart(art: any) {
       await dispatch(addToCart(art)); // Dispatch action to add to cart
@@ -37,8 +58,8 @@ export default function GalleryPage() {
           arts.map((art) => (
             <div key={art.id} className="border rounded-lg p-4">
               <img
-                src={art.image_url } // Fallback image
-                alt={art.name}
+                src={art.image_url } 
+                alt={art.title}
                 className="w-full h-48 object-cover rounded-md"
               />
               <h2 className="text-xl font-bold mt-2">{art.title}</h2>

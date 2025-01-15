@@ -14,6 +14,12 @@ export async function POST(req) {
             )
         }
 
+        if (!process.env.YOUR_API_V3_KEY) {
+            const errorMessage = "Missing required environment variable: YOUR_API_V3_KEY";
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        }
+
         const client = new SibApiV3Sdk.TransactionalEmailsApi();
             client.setApiKey(
               SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,

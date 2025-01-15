@@ -84,6 +84,9 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.5.2
         version: 14.5.2(@testing-library/dom@10.4.0)
+      '@types/draft-js':
+        specifier: ^0.11.18
+        version: 0.11.18
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -1229,6 +1232,9 @@ packages:
 
   '@types/caseless@0.12.5':
     resolution: {integrity: sha512-hWtVTC2q7hc7xZ/RLbxapMvDMgUnDvKvMOpKal4DrMyfGBUfB1oKaZlIRr6mJL+If3bAP6sV/QneGzF6tJjZDg==}
+
+  '@types/draft-js@0.11.18':
+    resolution: {integrity: sha512-lP6yJ+EKv5tcG1dflWgDKeezdwBa8wJ7KkiNrrHqXuXhl/VGes1SKjEfKHDZqOz19KQbrAhFvNhDPWwnQXYZGQ==}
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
@@ -5380,6 +5386,11 @@ snapshots:
   '@types/bluebird@3.5.42': {}
 
   '@types/caseless@0.12.5': {}
+
+  '@types/draft-js@0.11.18':
+    dependencies:
+      '@types/react': 19.0.7
+      immutable: 3.7.6
 
   '@types/estree@1.0.6': {}
 

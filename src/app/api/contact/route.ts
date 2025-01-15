@@ -18,10 +18,16 @@ export async function POST(req: Request) {
     
     const htmlContact = getHtmlContact(name, message, email);
 
+    if (!process.env.YOUR_API_V3_KEY) {
+      const errorMessage = "Missing required environment variable: YOUR_API_V3_KEY";
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
     const client = new SibApiV3Sdk.TransactionalEmailsApi();
     client.setApiKey(
       SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
-      process.env.YOUR_API_V3_KEY
+      process.env.YOUR_API_V3_KEY 
     );
 
     const content = {

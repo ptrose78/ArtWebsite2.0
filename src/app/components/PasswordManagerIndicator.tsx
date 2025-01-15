@@ -5,7 +5,7 @@ import { handleLogin } from "@/app/lib/actions";
 import { useActionState } from 'react';
 
 export default function PasswordManagerIndicator() {
-  const [indicatorHTML, setIndicatorHTML] = useState(null);
+  const [indicatorHTML, setIndicatorHTML] = useState<string | null>(null); 
 
   useEffect(() => {
     // This code runs only on the client-side
