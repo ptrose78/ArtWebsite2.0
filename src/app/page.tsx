@@ -38,11 +38,11 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white relative z-10 py-16 sm:py-20 lg:py-32">
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Discover Unique Art for Your Space
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            Palette Dreams Studio
           </h1>
-          <p className="text-sm sm:text-lg mb-8">
-            Handcrafted, original art pieces
+          <p className="sm:text-lg mb-8">
+            Discover Unique Art for Your Space
           </p>
           <a
             href="/arts"
@@ -74,9 +74,9 @@ export default function Home() {
               />
               <div className="p-4">
                 <h3 className="text-lg sm:text-xl font-semibold">
-                  Artwork Title {art.title}     
+                  {art.title}     
                 </h3>
-                <p className="text-gray-600">{`$${art.price}`}</p>
+                <p className="text-gray-600 font-semibold">{`$${art.price}`}</p>
               </div>
             </div>
             ) : null

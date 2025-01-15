@@ -7,6 +7,21 @@ import { neon } from "@neondatabase/serverless";
 import { formatCurrency } from "@/app/lib/utils";
 import { revalidatePath } from 'next/cache';
 
+export async function fetchMisc() {
+  try {
+    // Initialize the Neon SQL connection
+    const sql = neon(process.env.POSTGRES_URL); 
+
+    // Fetch data from the "arts" table
+    const misc  = await sql`SELECT * FROM misc`;
+
+    return misc;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch arts.");
+  }
+}
+
 export async function fetchArts() {
   try {
     // Initialize the Neon SQL connection

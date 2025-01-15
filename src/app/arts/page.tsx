@@ -41,8 +41,8 @@ export default function GalleryPage() {
                 alt={art.name}
                 className="w-full h-48 object-cover rounded-md"
               />
-              <h2 className="text-xl font-bold mt-2">{art.name}</h2>
-              <p className="text-gray-600">Price: ${art.price}</p>
+              <h2 className="text-xl font-bold mt-2">{art.title}</h2>
+              <p className="text-gray-600 font-semibold">${art.price}</p>
               
               <div className="flex justify-between items-center mt-4">
                 <button
