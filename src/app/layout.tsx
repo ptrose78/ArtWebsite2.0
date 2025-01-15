@@ -86,9 +86,9 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
               <div className="nav-container ml-2 justify-between items-center">
                 <div className="flex">
-                  <Link href="/cart" className="ml-auto">
+                  {/* <Link href="/cart" className="ml-auto">
                     <CartIcon />
-                  </Link>
+                  </Link> */}
                 </div>
                 <nav>
                 <ul className="flex space-x-2 text-sm sm:space-x-6 sm:text-base">
