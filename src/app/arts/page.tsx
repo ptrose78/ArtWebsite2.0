@@ -37,7 +37,7 @@ export default function GalleryPage() {
           arts.map((art) => (
             <div key={art.id} className="border rounded-lg p-4">
               <img
-                src={art.image_url || '/placeholder.jpg'} // Fallback image
+                src={art.image_url } // Fallback image
                 alt={art.name}
                 className="w-full h-48 object-cover rounded-md"
               />
