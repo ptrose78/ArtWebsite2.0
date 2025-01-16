@@ -3,12 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CartState {
   items: any[];
-  totalPrice: number;
+  totalPrice: string;
 };
 
 const initialState: CartState = {
   items: [],
-  totalPrice: 0,
+  totalPrice: "0.00",
 }
 
 const cartSlice = createSlice({
@@ -17,14 +17,17 @@ const cartSlice = createSlice({
   reducers: {
     addToCart(state, action: PayloadAction<any>) {
       state.items.push(action.payload);    
-      state.totalPrice = state.items.reduce((total, item)=>{return total + Number(item.price)}, 0);
+      const total = state.items.reduce((total, item)=>{return total + Number(item.price)}, 0);
+      state.totalPrice = total.toFixed(2);
     },
     removeFromCart(state, action: PayloadAction<number>) {
       state.items = state.items.filter(item => item.id !== action.payload);
-      state.totalPrice = state.items.reduce((total, item)=>{return total + Number(item.price)}, 0)
+      const total = state.items.reduce((total, item)=>{return total + Number(item.price)}, 0);
+      state.totalPrice = total.toFixed(2);
     },
     clearCart(state) {
       state.items = [];
+      state.totalPrice = "0.00";
     },
   }
 });

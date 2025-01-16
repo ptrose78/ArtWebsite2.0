@@ -144,7 +144,7 @@ export default function Home() {
       {/* Text Content */}
       <div className="absolute inset-0 z-30 flex flex-col justify-center items-center text-center text-white px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-          Woodlands Design
+          Woodlands Designs
         </h1>
         <p className="sm:text-lg mb-8">Discover Unique Art for Your Space</p>
         <a
@@ -196,7 +196,7 @@ export default function Home() {
                 <h3 className="text-lg sm:text-xl font-semibold">
                   {art.title}     
                 </h3>
-                <p className="text-gray-600 font-semibold">{`$${art.price}`}</p>
+                <p className="text-gray-600 font-semibold">{`$${parseFloat(art.price).toFixed(2)}`}</p>
               </div>
             </div>
             ) : null

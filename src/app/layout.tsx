@@ -9,8 +9,6 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store'; // Path to your Redux store
 import Head from 'next/head';
 import Script from 'next/script';
-// import CartIcon from '@/app/components/CartIcon';
-import { fetchMisc } from '@/app/lib/data';
 import Navbar from "@/app/components/Navbar";
 
 const geistSans = Geist({
@@ -44,28 +42,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       };
       initializeSquare();
     }
-
-    async function getLogo() {
-      try {
-        const misc = await fetchMisc(); // Fetch the data
-        console.log('Misc data:', misc);
-    
-        if (!Array.isArray(misc)) {
-          throw new Error('Expected misc to be an array');
-        }
-    
-        const logo = misc.find(item => item.description === "logo");
-        
-        if (logo?.image_url) {
-          setLogo(logo.image_url); // Assuming you want to store the URL
-        } else {
-          console.error("Logo or image_url is undefined");
-        }
-      } catch (error) {
-        console.error('Error in get Logo:', error.message);
-      }
-    }
-    getLogo();
   
   }, [squareLoaded]);  
 
@@ -78,19 +54,9 @@ export default function Layout({ children }: { children: ReactNode }) {
             <meta name="description" content={metadata.description ?? 'Woodlands Design, Art Painting Business'} />
           </Head>
 
-          <header className="bg-white py-4">
+          <header className="bg-white">
             <div className="container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8">
-              <div className="logo">
-                <Link href="/" className="text-lg sm:text-2xl font-bold text-gray-700">
-                  <img src={logo ?? 'https://placehold.co/50x50'} alt="Logo" className="rounded" style={{ width: '50px', height: 'auto' }} />
-                </Link>
-              </div>
               <div className="nav-container ml-2 justify-between items-center">
-                <div className="flex">
-                  {/* <Link href="/cart" className="ml-auto">
-                    <CartIcon />
-                  </Link> */}
-                </div>
                 <Navbar/>
               </div>
             </div>
@@ -103,9 +69,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           <footer className="bg-gray-900 text-white py-8 px-4 sm:px-6 lg:px-8">
             <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
               <div className="text-center sm:text-left">
-                <p>&copy; 2024 ArtBusiness</p>
-                <p>123 Art St, City, Country</p>
-                <p>contact@artbusiness.com</p>
+                <p>&copy; 2025 Woodland Designs</p>
+                <p>door2murrin@msn.com</p>
+                <p>630-946-6785</p>
               </div>
               <div className="mt-4 sm:mt-0 space-x-6">
                 <a href="#" className="hover:text-teal-500">Instagram</a>

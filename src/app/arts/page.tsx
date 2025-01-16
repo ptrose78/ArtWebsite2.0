@@ -65,7 +65,7 @@ export default function GalleryPage() {
                 className="w-full h-48 object-cover rounded-md"
               />
               <h2 className="text-xl font-bold mt-2">{art.title}</h2>
-              <p className="text-gray-600 font-semibold">${art.price}</p>
+              <p className="text-gray-600 font-semibold">${parseFloat(art.price).toFixed(2)}</p>
               
               <div className="flex justify-between items-center mt-4">
                 <button

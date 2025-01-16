@@ -167,22 +167,22 @@ export default function CheckoutForm() {
 
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+    <div className="max-w-2xl mx-auto p-8 bg-gray-50 shadow-lg rounded-lg">
+      <h1 className="text-2xl font-semibold text-teal-700 text-center mb-3">Checkout</h1>
       <form onSubmit={handleCheckout}>
         {/* Billing Information */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">Email Address</h3>
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-3 text-teal-600">Email Address</h3>
           <input
             type="email"
             name="email"
             value={emailAddress.email}
             onChange={handleEmailChange}
-            placeholder="email address (To receive receipt)"
+            placeholder="Email address (to receive receipt)"
             required
-            className="mb-3 p-2 border border-gray-300 rounded-md w-full"
-            />
-          <h3 className="text-lg font-semibold mb-2">Billing Address</h3>
+            className="mb-4 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-400"
+          />
+          <h3 className="text-lg font-semibold mb-3 text-teal-600">Billing Address</h3>
           <input
             type="text"
             name="firstName"
@@ -190,7 +190,7 @@ export default function CheckoutForm() {
             onChange={handleBillingChange}
             placeholder="First Name"
             required
-            className="mb-3 mr-2 p-2 border border-gray-300 rounded-md"
+            className="mb-4 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
           <input
             type="text"
@@ -199,8 +199,8 @@ export default function CheckoutForm() {
             onChange={handleBillingChange}
             placeholder="Last Name"
             required
-            className="mb-3 p-2 border border-gray-300 rounded-md"
-            />
+            className="mb-4 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-400"
+          />
           <input
             type="text"
             name="address"
@@ -208,7 +208,7 @@ export default function CheckoutForm() {
             onChange={handleBillingChange}
             placeholder="Street Address"
             required
-            className="mb-3 p-2 border border-gray-300 rounded-md w-full"
+            className="mb-4 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <input
@@ -218,7 +218,7 @@ export default function CheckoutForm() {
               onChange={handleBillingChange}
               placeholder="City"
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
             <input
               type="text"
@@ -227,7 +227,7 @@ export default function CheckoutForm() {
               onChange={handleBillingChange}
               placeholder="State"
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
             <input
               type="text"
@@ -236,19 +236,19 @@ export default function CheckoutForm() {
               onChange={handleBillingChange}
               placeholder="ZIP Code"
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
           </div>
         </div>
-
+  
         {/* Checkbox for Same as Billing */}
-        <div className="mb-6">
-          <label className="inline-flex items-center">
+        <div className="mb-8">
+          <label className="inline-flex items-center text-gray-700">
             <input
               type="checkbox"
               checked={sameAsBilling}
               onChange={handleCheckboxChange}
-              className="mr-2"
+              className="mr-2 focus:ring-teal-400"
             />
             Shipping Address Same as Billing Address
           </label>
@@ -256,110 +256,120 @@ export default function CheckoutForm() {
 
         {/* Shipping Information */}
         {!sameAsBilling && (
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Shipping Address</h3>
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-3 text-teal-600">Shipping Address</h3>
+            {/* Reuse input fields for Shipping Address */}
             <input
-              type="text"
-              name="firstName"
-              value={shippingAddress.firstName}
-              onChange={handleShippingChange}
-              placeholder="First Name"
-              required
-              className="mb-3 mr-2 p-2 border border-gray-300 rounded-md"
-            />
-            <input
-              type="text"
-              name="lastName"
-              value={shippingAddress.lastName}
-              onChange={handleShippingChange}
-              placeholder="Last Name"
-              required
-              className="mb-3 p-2 border border-gray-300 rounded-md"
-            />
-            <input
-              type="text"
-              name="address"
-              value={shippingAddress.address}
-              onChange={handleShippingChange}
-              placeholder="Street Address"
-              required
-              className="mb-3 p-2 border border-gray-300 rounded-md w-full"
+            type="text"
+            name="firstName"
+            value={billingAddress.firstName}
+            onChange={handleBillingChange}
+            placeholder="First Name"
+            required
+            className="mb-4 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-400"
+          />
+          <input
+            type="text"
+            name="lastName"
+            value={billingAddress.lastName}
+            onChange={handleBillingChange}
+            placeholder="Last Name"
+            required
+            className="mb-4 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-400"
+          />
+          <input
+            type="text"
+            name="address"
+            value={billingAddress.address}
+            onChange={handleBillingChange}
+            placeholder="Street Address"
+            required
+            className="mb-4 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <input
                 type="text"
                 name="city"
-                value={shippingAddress.city}
-                onChange={handleShippingChange}
+                value={billingAddress.city}
+                onChange={handleBillingChange}
                 placeholder="City"
                 required
-                className="p-2 border border-gray-300 rounded-md w-full"
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
               <input
                 type="text"
                 name="state"
-                value={shippingAddress.state}
-                onChange={handleShippingChange}
+                value={billingAddress.state}
+                onChange={handleBillingChange}
                 placeholder="State"
                 required
-                className="p-2 border border-gray-300 rounded-md w-full"
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
               <input
                 type="text"
                 name="zip"
-                value={shippingAddress.zip}
-                onChange={handleShippingChange}
+                value={billingAddress.zip}
+                onChange={handleBillingChange}
                 placeholder="ZIP Code"
                 required
-                className="p-2 border border-gray-300 rounded-md w-full"
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
             </div>
           </div>
         )}
-
-        <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Order Summary</h3>
-            <h2 className="text-gray-700 font-bold mb-2">Items:</h2>
-                {cart.items.map((item)=>
-                <li key={item.id} className="grid grid-cols-1 sm:grid-cols-8 gap-1 mt-3">
-                <img src={item.image_url || 'https://placehold.co/10'}
+  
+        {/* Order Summary */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold mb-3 text-teal-600">Order Summary</h3>
+        <ul className="divide-y divide-gray-200">
+          {cart.items.map((item) => (
+            <li key={item.id} className="flex items-center py-4">
+              <img
+                src={item.image_url || 'https://placehold.co/10'}
                 alt={`Image of ${item.title}`}
-                className="w-16 h-16 object-cover mr-4"></img>
-                <p className="text-gray-700">{`$${item.price}`}</p>
-                </li>
-                )}
-                <p className="text-gray-700 font-bold mt-10">Total: {`$${cart.totalPrice}`}</p>
-        </div>
-        <div>
-          <div>
-          <p className="mb-5 text-center">All transactions are secure and encrypted.</p>
-            <div id="card-container"></div>
-            {/* The Square card element will be injected here */}
+                className="w-16 h-16 object-cover rounded-md mr-4"
+              />
+              <p className="text-gray-700 flex-1">{item.title}</p>
+              <p className="text-gray-700 font-bold">${item.price}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="text-xl font-bold text-gray-800 mt-4 text-right">
+          Total: ${cart.totalPrice}
+        </p>
+      </div>
+
+      {/* Payment Section */}
+      <div>
+        <p className="mb-6 text-center text-gray-600">
+          All transactions are secure and encrypted.
+        </p>
+        <div id="card-container" className="mb-6"></div>
+        <button
+          disabled={!card}
+          type="submit"
+          className="bg-teal-500 text-white py-3 px-6 rounded-lg w-full hover:bg-teal-600 transition-all">
+          Place Order
+        </button>
+        {paymentStatus && (
+          <div className="mt-4 text-center">
+            {paymentStatus === 'SUCCESS Charge' ? (
+              <div className="bg-green-100 p-4 rounded-lg">
+                <p className="text-green-800">
+                  Payment successful! Your receipt has been emailed to you.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-red-100 p-4 rounded-lg">
+                <p className="text-red-800">Payment failed. Please try again.</p>
+              </div>
+            )}
           </div>
-            
-            {/* Submit Button */}
-            <button
-              disabled={!card}
-              type="submit"
-              className="bg-teal-500 text-white py-2 px-4 rounded-md w-full hover:bg-teal-600">
-                Place Order
-            </button>
-            {paymentStatus && (
-            <div className="text-white mt-3 text-center">
-              {paymentStatus === 'SUCCESS Charge' ? (
-                <div>
-                <p className="bg-forestGreen mb-4 p-2 rounded-md border-green-800">You successfully paid. Your receipt has been emailed to you. Check your spam folder if necessary.</p>
-                <Link href='/arts' className="bg-teal-500 p-2 mt-4 rounded-md"><button>Return to Gallery</button></Link>
-                </div>
-              ) : (
-                <p className="bg-red-500 border-red-600">Sorry, your payment did not process. Review your credit card information and try again.</p>
-              )}
-            </div>
-          )}     
-        </div>
-      </form>
-    </div>
-  );
+        )}
+      </div>
+    </form>
+  </div>
+);
 }
 
 
