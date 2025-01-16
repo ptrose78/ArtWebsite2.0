@@ -11,6 +11,8 @@ interface Art {
   image_url: string;
   price: string;
   title: string;
+  date: string | null;
+  featured: boolean
 }
 
 export default function GalleryPage() {
@@ -21,14 +23,15 @@ export default function GalleryPage() {
   useEffect(() => {
       // Define the async function inside the useEffect
       const getArts = async (): Promise<Art[]> => {
-        const response = await fetch('/api/arts');
-        const data: Record<string, any>[] = await response.json();
-      
-        return data.map((item) => ({
+        const response = await fetchArts();
+              
+        return response.map((item) => ({
           id: item.id ?? 0, // Default to 0 if id is null/undefined
-          image_url: item.image_url ?? '',
+          image_url: item.image_url ?? 'https://placehold.co/200x200',
           price: item.price ?? '',
           title: item.title ?? '',
+          date: item.date,
+          featured: item.featured
         }));
       }
 
@@ -36,9 +39,8 @@ export default function GalleryPage() {
       const fetchData = async () => {
         const artData = await getArts();  
         setArts(artData);  
-
-      fetchData(); 
     }
+    fetchData(); 
   }, []); 
 
   async function handleAddToCart(art: any) {
@@ -58,7 +60,7 @@ export default function GalleryPage() {
           arts.map((art) => (
             <div key={art.id} className="border rounded-lg p-4">
               <img
-                src={art.image_url } 
+                src={art.image_url ?? 'https://placehold.co/200x200'} 
                 alt={art.title}
                 className="w-full h-48 object-cover rounded-md"
               />

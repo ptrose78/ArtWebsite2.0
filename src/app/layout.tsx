@@ -10,7 +10,8 @@ import { store } from '../store/store'; // Path to your Redux store
 import Head from 'next/head';
 import Script from 'next/script';
 // import CartIcon from '@/app/components/CartIcon';
-import { fetchMisc } from '@/app/lib/data'
+import { fetchMisc } from '@/app/lib/data';
+import Navbar from "@/app/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,11 +78,11 @@ export default function Layout({ children }: { children: ReactNode }) {
             <meta name="description" content={metadata.description ?? 'Woodlands Design, Art Painting Business'} />
           </Head>
 
-          <header className="bg-white shadow-md py-4">
+          <header className="bg-white py-4">
             <div className="container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8">
               <div className="logo">
                 <Link href="/" className="text-lg sm:text-2xl font-bold text-gray-700">
-                  <img src={logo ?? ''} alt="Logo" className="rounded" style={{ width: '50px', height: 'auto' }} />
+                  <img src={logo ?? 'https://placehold.co/50x50'} alt="Logo" className="rounded" style={{ width: '50px', height: 'auto' }} />
                 </Link>
               </div>
               <div className="nav-container ml-2 justify-between items-center">
@@ -90,40 +91,12 @@ export default function Layout({ children }: { children: ReactNode }) {
                     <CartIcon />
                   </Link> */}
                 </div>
-                <nav>
-                <ul className="flex space-x-2 text-sm sm:space-x-6 sm:text-base">
-                    <li>
-                      <Link href="/" className="text-gray-700 hover:text-gray-900">
-                        Home
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/about" className="text-gray-700 hover:text-gray-900">
-                        About
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/arts" className="text-gray-700 hover:text-gray-900">
-                        Gallery
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/blog" className="text-gray-700 hover:text-gray-900">
-                        Blogs
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/contact" className="text-gray-700 hover:text-gray-900">
-                        Contact
-                      </Link>
-                    </li>
-                  </ul>
-                </nav>
+                <Navbar/>
               </div>
             </div>
           </header>
 
-          <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="w-full mx-auto py-2">
             {children}
           </main>
 
