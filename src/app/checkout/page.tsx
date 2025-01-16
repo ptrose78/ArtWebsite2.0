@@ -31,18 +31,20 @@ export default function CheckoutForm() {
         console.log("square loaded")
         //initialize payments
         const payments = window.Square.payments(appId, locationId);
-        console.log(payments)
+        console.log("Payments initialized perhaps:", payments); 
   
         if (!payments) {
+          console.log("Failed to initialize Square Payments.");
           return;
         }
-  
+        
         try {
           const card = await payments.card();
-          console.log(card)
+          console.log("Card initialized:", card);
           await card.attach('#card-container'); // Attach to React-rendered div
           setCard(card);
         } catch (err) {
+          console.error("Error initializing card:", err);
         }
       };
   
