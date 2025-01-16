@@ -98,7 +98,7 @@ export default function Home() {
 
   return (
       <div>  
-         <section className="relative w-full h-[450px] sm:h-[500px] lg:h-[700px] overflow-hidden">
+      <section className="relative w-full h-[450px] sm:h-[500px] lg:h-[700px] overflow-hidden">
       {/* Slideshow */}
       <div className="absolute inset-0 w-full h-full">
         {slides.map((image, index) => (

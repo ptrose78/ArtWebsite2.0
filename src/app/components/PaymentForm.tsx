@@ -5,7 +5,7 @@ export default function PaymentForm() {
   
   const [card, setCard] = useState<any>(null);
 
-  const appId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID!;
+  const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID!;
   const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!;
 
   useEffect(() => {
