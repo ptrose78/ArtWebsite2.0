@@ -80,7 +80,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </footer>
            {/* Add the Square SDK script and handle its load event */}
            <Script
-            src="https://sandbox.web.squarecdn.com/v1/square.js"
+            src="https://web.squarecdn.com/v1/square.js"
             strategy="beforeInteractive"
             onLoad={() => setSquareLoaded(true)} // Mark Square as loaded once the script loads
             onError={(e) => console.error('Failed to load Square SDK:', e)}

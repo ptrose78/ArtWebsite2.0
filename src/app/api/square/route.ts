@@ -2,8 +2,8 @@ import { Client, Environment } from "square";
 import { NextResponse } from 'next/server';
 
 const client = new Client({
-  environment: Environment.Sandbox, // Use `Environment.Production` for live
-  accessToken: process.env.SANDBOX_SQUARE_ACCESS_TOKEN, // Replace with your Sandbox Access Token
+  environment: Environment.Production, // Use `Environment.Production` for live
+  accessToken: process.env.SQUARE_ACCESS_TOKEN, // Replace with your Sandbox Access Token
 });
 
 export async function POST(req) {

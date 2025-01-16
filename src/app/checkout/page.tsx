@@ -19,17 +19,16 @@ export default function CheckoutForm() {
     const [paymentStatus, setPaymentStatus] = useState('');
     const cart = useSelector(selectCart);
   
-    const appId = process.env.NEXT_PUBLIC_SANDBOX_SQUARE_APPLICATION_ID!;
-    const locationId = process.env.NEXT_PUBLIC_SANDBOX_SQUARE_LOCATION_ID!;
+    const appId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID!;
+    const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!;
   
     useEffect(() => {
       //load Square Web Payments SDK
-      console.log('rerender inside useEffect')
       const loadSquare = async () => {
         if (!window.Square) {
           return;
         }
-        console.log('rerender past window.square useEffect')
+        console.log("square loaded")
         //initialize payments
         const payments = window.Square.payments(appId, locationId);
         console.log(payments)
