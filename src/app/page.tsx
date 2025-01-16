@@ -20,6 +20,7 @@ export default function Home() {
   const [successSubmit, setSuccessSubmit] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0); // Track the current slide index
   const [animationKey, setAnimationKey] = useState(0);
+  const [dynamicHeight, setDynamicHeight] = useState("72%");
 
    // Sample slide images (replace with dynamic images from `arts` if needed)
 
@@ -37,6 +38,21 @@ export default function Home() {
       backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_c8p1g0c8p1g0c8p1.jfif?alt=media&token=e2254ad1-f836-4f46-820a-b51bf50e305a',
     },
   ];
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const updateHeight = () => {
+        setDynamicHeight(`clamp(20%, 65%, ${window.innerWidth*0.5}px)`);
+      };
+
+      updateHeight(); // Set height initially
+      window.addEventListener("resize", updateHeight); // Update on resize
+
+      return () => {
+        window.removeEventListener("resize", updateHeight); // Cleanup
+      };
+    }
+  }, []);
    
   // Automatically change slides every 5 seconds
   useEffect(() => {
@@ -82,7 +98,7 @@ export default function Home() {
 
   return (
       <div>  
-         <section className="relative w-full h-[450px] sm:h-[500px] lg:h-[650px] overflow-hidden">
+         <section className="relative w-full h-[450px] sm:h-[500px] lg:h-[700px] overflow-hidden">
       {/* Slideshow */}
       <div className="absolute inset-0 w-full h-full">
         {slides.map((image, index) => (
@@ -101,7 +117,7 @@ export default function Home() {
             style={{
               backgroundImage: `url(${image.backgroundImage})`, // Use slide-specific background image
               backgroundSize: 'cover',
-              backgroundPosition: '5% 55%'
+              backgroundPosition: '5% 60%'
             }}
           ></div>
 
@@ -111,11 +127,11 @@ export default function Home() {
               alt={`Slide ${index}`}
               className="absolute object-contain"
               style={{
-                width: 'auto', // Maintain aspect ratio
-                height: `clamp(67%, 72%, ${window.innerWidth / 2}px)`, // Dynamically adjust height
-                top: '10%', // Move the image 10% down from the top
-                left: '45%', // Move the image 20% from the left
-                transform: 'translate(-20%, -10%)', // Adjust for the shifted position
+                width: "auto", // Maintain aspect ratio
+                height: dynamicHeight, // Dynamically adjust height
+                top: "12%", // Move the image 10% down from the top
+                left: "45%", // Move the image 20% from the left
+                transform: "translate(-20%, -10%)", // Adjust for the shifted position
               }}
             />
           </div>
