@@ -41,7 +41,6 @@ export async function fetchArts() {
 
     // Fetch data from the "arts" table
     const arts  = await sql`SELECT * FROM arts`;
-    console.log(arts)
 
     // Format the data
     // const arts = rows.map((art) => ({

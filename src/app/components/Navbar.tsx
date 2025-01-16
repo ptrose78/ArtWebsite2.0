@@ -6,7 +6,7 @@ import { selectCart } from '../../store/features/cartSlice';
 import { fetchMisc } from '@/app/lib/data';
 
 export default function Navbar() {
-  const [logo, setLogo] = useState<string>('');
+  const [logo, setLogo] = useState<string|null>(null);
   const [menuOpen, setMenuOpen] = useState(false); // State to track menu visibility
   const cart = useSelector(selectCart);
 
@@ -48,12 +48,12 @@ export default function Navbar() {
             {/* Logo - Centered */}
             <div className="flex justify-center w-full">
               <Link href="/" className="text-lg sm:text-2xl font-bold text-gray-700">
-                <img
+                {logo ? <img
                   src={logo ?? 'https://placehold.co/50x50'}
                   alt="Logo"
                   className="rounded"
                   style={{ width: '225px', height: 'auto' }}
-                />
+                /> : <div>Loading...</div>}
               </Link>
             </div>
 
