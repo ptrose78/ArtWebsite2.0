@@ -16,7 +16,7 @@ export const config = {
 };
 
 async function streamToBlob(stream: ReadableStream<Uint8Array>): Promise<Blob> {
-  const chunks = [];
+  const chunks: Uint8Array[] = []; 
   const reader = stream.getReader();
 
   while (true) {
