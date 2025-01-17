@@ -52,7 +52,7 @@ export default function Navbar() {
                   src={logo ?? 'https://placehold.co/50x50'}
                   alt="Logo"
                   className="rounded"
-                  style={{ width: '225px', height: 'auto' }}
+                  style={{ width: 'auto', height: '80px' }}
                 /> : <div>Loading...</div>}
               </Link>
             </div>

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { fetchArts, addCustomers } from '@/app/lib/data'
 import { useEffect, useState } from 'react';
 
-interface Art {
+interface GalleryItem {
   id: number | string; // Accepts both numbers and strings
   image_url: string;
   price: string;
@@ -15,7 +15,8 @@ interface Art {
 }
 
 export default function Home() {
-  const [arts, setArts] = useState<Art[]>([]); 
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [successSubmit, setSuccessSubmit] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0); // Track the current slide index
@@ -38,6 +39,30 @@ export default function Home() {
       backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_c8p1g0c8p1g0c8p1.jfif?alt=media&token=e2254ad1-f836-4f46-820a-b51bf50e305a',
     },
   ];
+
+  const fetchGalleryItems = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/gallery");
+      const result = await response.json();
+      if (response.ok) {
+        setGalleryItems(result.galleryItems);
+      } else {
+        alert(`Error fetching gallery items: ${result.error}`);
+      }
+    } catch (error) {
+      console.error("Error fetching gallery items:", error);
+      alert("An error occurred while fetching gallery items.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGalleryItems();
+  }, []);
+
+  console.log(galleryItems)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -63,30 +88,6 @@ export default function Home() {
 
     return () => clearInterval(interval); // Cleanup the interval on component unmount
   }, [slides.length]);
-
-  useEffect(() => {
-    // Define the async function inside the useEffect
-        const getArts = async (): Promise<Art[]> => {
-            const response = await fetchArts();
-            
-            return response.map((item) => ({
-              id: item.id ?? 0, // Default to 0 if id is null/undefined
-              image_url: item.image_url ?? 'https://placehold.co/200x200',
-              price: item.price ?? '',
-              title: item.title ?? '',
-              date: item.date,
-              featured: item.featured
-            }));
-          }
-
-    // Call the async function and set the state with the resolved data
-    const fetchData = async () => {
-      const artData = await getArts();  // Await the Promise to get the resolved data
-      setArts(artData);  // Now set the arts state with the resolved data
-    };
-
-    fetchData(); // Call the fetchData function inside useEffect
-  }, []); // Empty dependency array means this runs only once when the component mounts
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -144,7 +145,7 @@ export default function Home() {
       {/* Text Content */}
       <div className="absolute inset-0 z-30 flex flex-col justify-center items-center text-center text-white px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-          Woodlands Designs
+          Woodland Designs
         </h1>
         <p className="sm:text-lg mb-8">Discover Unique Art for Your Space</p>
         <a
@@ -179,8 +180,8 @@ export default function Home() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Artwork Card */}
-          {arts.map((art) => 
-            art.featured === "true" ? (
+          {galleryItems.map((art) => 
+            art.featured ? (
             <div
               key={art.id}
               className="bg-white border border-gray-200 rounded-lg overflow-hidden"
