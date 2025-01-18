@@ -16,7 +16,7 @@ export default async function PostAdminPage({ params }) {
   }
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-lg mx-auto p-2 bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Update Post</h1>
       <PostForm initialPost={post} />
     </div>

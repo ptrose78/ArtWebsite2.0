@@ -290,3 +290,25 @@ export async function deletePost(post) {
     throw new Error("Failed to delete post.")
   }
 }
+
+export async function fetchUserById(username:string) {
+   
+    try {
+        if (!process.env.POSTGRES_URL) {
+            const errorMessage = "Missing environmental variable."
+            console.error(errorMessage)
+            throw new Error(errorMessage);
+        }
+
+        const sql = neon(process.env.POSTGRES_URL);
+        const result = await sql`
+        SELECT * FROM users WHERE username = ${username}
+        `;
+        console.log('result:', result[0])
+        return result.length > 0 ? result[0] : null;
+    
+    } catch(error) {
+        console.error("Database error:", error);
+        return { message: "Failed to fetch user.", status: 500 };
+    }
+}
