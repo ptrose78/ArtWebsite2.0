@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { handleLogin } from "@/app/lib/actions";
 import { useActionState } from 'react';
 
 export default function PasswordManagerIndicator() {
