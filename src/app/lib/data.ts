@@ -94,7 +94,7 @@ export async function deleteArts(cart) {
   }
 }
 
-export async function addCustomers(email) {
+export async function addSubscribers(email) {
   try {
     if (!process.env.POSTGRES_URL) {
       const errorMessage = "Missing environmental variable."
@@ -159,7 +159,7 @@ export async function createPost(post){
       VALUES (${post.title}, ${post.content}, ${post.featured}, ${post.excerpt})
       RETURNING id`
 
-      revalidatePath("/admin/blog")
+      revalidatePath("/admin/site/blog")
       return {
         success: true,
         message: "Post submitted successfully."
@@ -227,7 +227,7 @@ export async function updatePost(id: number, post: { title?: string; content?: s
         updates.push('archived = $5');
         values.push(post.archived);
       }
-
+      console.log(updates.length)
       if (updates.length === 0) {
           return { success: true, message: "No fields to update." }; // Nothing to update
       }
@@ -240,17 +240,10 @@ export async function updatePost(id: number, post: { title?: string; content?: s
 
       // Debugging log
       console.log("Executing query:", query);
-      console.log("With values:", values);
 
       values.push(id); // Add the id to the values array
-
-      const result = await sql(query, values);
-
-      if (result.length  === 0) {
-          return { success: false, message: "Post not found." }; // No rows updated, post probably doesn't exist
-      }
-
-      revalidatePath("/admin/blog")
+     
+      revalidatePath("/admin/site/blog")
       return { success: true, message: "Post updated successfully." };
   } catch (error) {
       console.error("Database error:", error);

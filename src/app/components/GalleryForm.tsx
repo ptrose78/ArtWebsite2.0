@@ -70,7 +70,7 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
       onSubmit={handleSubmit}
       className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 space-y-4"
     >
-      <h2 className="text-2xl font-semibold text-gray-800 text-center">Gallery Item Form</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 text-center">Create Gallery Item</h2>
 
       <div className="flex flex-col">
         <label htmlFor="title" className="text-sm font-medium text-gray-600">

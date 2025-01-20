@@ -1,22 +1,23 @@
 import { NextResponse } from 'next/server';
 import * as SibApiV3Sdk from "@sendinblue/client";
-import getHtmlContact from "@/app/utils/getHtmlContact"
+import getHtmlSubscriber from "@/app/utils/getHtmlSubscriber"
 import { Carter_One } from 'next/font/google';
 
 export async function POST(req: Request) {
   console.log('post request received')
 
   try {
-    const { name, email, message } = await req.json();
-
-    if (!name || !email || !message) {
+    
+    const { email} = await req.json();
+    console.log(email)
+    if (!email) {
       return NextResponse.json(
         { success: false, error: 'All fields are required.' },
         { status: 400 }
       );
     }
     
-    const htmlContact = getHtmlContact(name, message, email);
+    const htmlContact = getHtmlSubscriber(email);
 
     if (!process.env.YOUR_API_V3_KEY) {
       const errorMessage = "Missing required environment variable: YOUR_API_V3_KEY";
@@ -31,9 +32,9 @@ export async function POST(req: Request) {
     );
 
     const content = {
-      sender: { name: name, email: process.env.OWNERS_EMAIL },
+      sender: { email: process.env.OWNERS_EMAIL },
       to: [{ email: process.env.OWNERS_EMAIL }], // Correct format
-      subject: "Woodland Designs: Contact Message",
+      subject: "Woodland Designs: New Subscriber!",
       htmlContent: htmlContact,
     };    
 

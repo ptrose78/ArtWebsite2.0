@@ -2,8 +2,8 @@
 import Layout from "@/app/layout";
 import Link from 'next/link';
 import Image from 'next/image';
-import { fetchArts, addCustomers } from '@/app/lib/data'
-import { useEffect, useState } from 'react';
+import { fetchArts, addSubscribers } from '@/app/lib/data'
+import { useEffect, useState, useRef, FormEvent  } from 'react';
 
 interface GalleryItem {
   id: number | string; // Accepts both numbers and strings
@@ -14,6 +14,14 @@ interface GalleryItem {
   featured: string;
 }
 
+function formDataToObject(formData: FormData) {
+  const obj: Record<string, any> = {};
+  formData.forEach((value, key) => {
+      obj[key] = value;
+  });
+  return obj;
+}
+
 export default function Home() {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -22,8 +30,14 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0); // Track the current slide index
   const [animationKey, setAnimationKey] = useState(0);
   const [dynamicHeight, setDynamicHeight] = useState("72%");
+  const [imagePosition, setImagePosition] = useState({
+    top: "14%", // Initial position for larger screens
+    left: "55%", // Initial position for larger screens
+    transform: "translate(-50%, -10%)", // Initial position for larger screens
+  });
 
-   // Sample slide images (replace with dynamic images from `arts` if needed)
+  const [inView, setInView] = useState(false); // Track if the section is in view
+  const sectionRef = useRef(null); // Reference for Featured Artworks section
 
    const slides = [
     {
@@ -62,12 +76,48 @@ export default function Home() {
     fetchGalleryItems();
   }, []);
 
-  console.log(galleryItems)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      if (window.innerWidth <= 665) {  // For smaller screens
+        setImagePosition({
+          top: "18%",  // Move the image 10% from the top
+          left: "55%", // Center the image horizontally
+          transform: "translate(-50%, -10%)", // Adjust for more consistent centering
+        });
+      } else if (window.innerWidth <= 768) {  // For smaller screens
+        setImagePosition({
+          top: "12%",  // Move the image 10% from the top
+          left: "55%", // Center the image horizontally
+          transform: "translate(-50%, -10%)", // Adjust for more consistent centering
+        });
+      } else if (window.innerWidth <= 1024) {  // For smaller screens
+        setImagePosition({
+          top: "10%",  // Move the image 10% from the top
+          left: "55%", // Center the image horizontally
+          transform: "translate(-50%, -10%)", // Adjust for more consistent centering
+        });
+      } else if (window.innerWidth <= 1220) {  // For smaller screens
+        setImagePosition({
+          top: "8%",  // Move the image 10% from the top
+          left: "55%", // Center the image horizontally
+          transform: "translate(-50%, -10%)", // Adjust for more consistent centering
+        });
+      }
+       else {  // For larger screens
+        setImagePosition({
+          top: "15%", // Move the image 14% from the top
+          left: "55%", // Move the image 45% from the left
+          transform: "translate(-50%, -10%)", // Adjust for more consistent centering
+        });
+      }     
+
       const updateHeight = () => {
-        setDynamicHeight(`clamp(20%, 65%, ${window.innerWidth*0.5}px)`);
+        if (window.innerWidth <= 768) {  // For smaller screens
+          setDynamicHeight("clamp(20%, 50%, 400px)");  // Shorter height on small screens
+        } else {  // For larger screens
+          setDynamicHeight("clamp(20%, 67%, 500px)");  // Keep the height similar to current on larger screens
+        }
       };
 
       updateHeight(); // Set height initially
@@ -89,23 +139,69 @@ export default function Home() {
     return () => clearInterval(interval); // Cleanup the interval on component unmount
   }, [slides.length]);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const response = await addCustomers(email);
-    if (response.success) {
-      setSuccessSubmit(true)
+    async function onSubmit(event: FormEvent<HTMLFormElement>) {
+         event.preventDefault();
+       
+         try {
+          
+           const formData = new FormData(event.currentTarget);
+           
+           // Log each entry in the FormData
+           const formObject = formDataToObject(formData);
+          
+           const responseSubscriberDB = await addSubscribers(formObject.email);
+ 
+           const responseSubscriberEmail = await fetch('/api/subscriber', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify(formObject),
+           })
+
+           console.log(responseSubscriberEmail)
+
+          if ( responseSubscriberEmail.ok && responseSubscriberDB.success) {
+            setSuccessSubmit(true)
+          }
+           
+       } catch (error) {          
+           console.error(error);
+       } finally {
+           setIsLoading(false);
+         }
+       }
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true); // Trigger animation when in view
+        }
+      },
+      {
+        threshold: 0.5, // Trigger animation when 50% of the element is visible
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
     }
-  }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   return (
       <div>  
-      <section className="relative w-full h-[450px] sm:h-[500px] lg:h-[700px] overflow-hidden">
+      <section className="relative w-full h-[450px] sm:h-[500px] lg:h-[700px] overflow-hidden -mt-12">
       {/* Slideshow */}
       <div className="absolute inset-0 w-full h-full">
         {slides.map((image, index) => (
           <div
             key={`${index}-${animationKey}`} // Unique key ensures re-render
-            className={`absolute inset-0 z-10 fade-slide ${
+            className={`absolute inset-0 z-10 ${
               index === currentSlide ? 'block' : 'hidden'
             }`}
             style={{
@@ -114,7 +210,7 @@ export default function Home() {
           >
             {/* Background Image */}
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-40 z-0"
+            className="absolute inset-0 bg-cover bg-center opacity-40 z-0 fade-slide"
             style={{
               backgroundImage: `url(${image.backgroundImage})`, // Use slide-specific background image
               backgroundSize: 'cover',
@@ -124,17 +220,17 @@ export default function Home() {
 
             {/* Main Slide Image */}
             <img
-              src={image.mainImage}
-              alt={`Slide ${index}`}
-              className="absolute object-contain"
-              style={{
-                width: "auto", // Maintain aspect ratio
-                height: dynamicHeight, // Dynamically adjust height
-                top: "12%", // Move the image 10% down from the top
-                left: "45%", // Move the image 20% from the left
-                transform: "translate(-20%, -10%)", // Adjust for the shifted position
-              }}
-            />
+            src={image.mainImage}
+            alt={`Slide ${index}`}
+            className="absolute object-contain fade-slide2"
+            style={{
+              width: "auto", // Maintain aspect ratio
+              height: dynamicHeight, // Dynamically adjust height
+              top: imagePosition.top,  // Dynamically adjust top position
+              left: imagePosition.left,  // Dynamically adjust left position
+              transform: imagePosition.transform, // Dynamically adjust transform
+            }}
+          />
           </div>
         ))}
       </div>
@@ -174,36 +270,40 @@ export default function Home() {
     </section>
 
       {/* Featured Artworks Section */}
-      <section className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <section 
+        ref={sectionRef}
+        className={`container mx-auto py-12 px-4 sm:px-6 lg:px-8`}
+      >
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-center mb-8">
           Featured Artworks
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Artwork Card */}
+          {/* Artwork Cards */}
           {galleryItems.map((art) => 
             art.featured ? (
-            <div
-              key={art.id}
-              className="bg-white border border-gray-200 rounded-lg overflow-hidden"
-            >
-              <img
-                src={art.image_url || 'https://placehold.co/200x200' }
-                alt={`Artwork ${art}`}
-                width={500}
-                height={500}
-                className="w-full h-48 sm:h-64 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-lg sm:text-xl font-semibold">
-                  {art.title}     
-                </h3>
-                <p className="text-gray-600 font-semibold">{`$${parseFloat(art.price).toFixed(2)}`}</p>
+              <div
+                key={art.id}
+                className={`bg-white border border-gray-200 rounded-lg overflow-hidden ${inView ? 'slide-up' : ''}`}
+              >
+                <img
+                  src={art.image_url || 'https://placehold.co/200x200'}
+                  alt={`Artwork ${art.title}`}
+                  width={500}
+                  height={500}
+                  className="w-full h-48 sm:h-64 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-lg sm:text-xl font-semibold">
+                    {art.title}
+                  </h3>
+                  <p className="text-gray-600 font-semibold">{`$${parseFloat(art.price).toFixed(2)}`}</p>
+                </div>
               </div>
-            </div>
             ) : null
           )}
         </div>
       </section>
+
 
       {/* Testimonials Section */}
       <section className="bg-gray-100 py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
@@ -213,10 +313,10 @@ export default function Home() {
           </h2>
           <div className="space-y-6">
             <div className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-              <p>"This painting brought a new energy to my living room!" - Sarah, NY</p>
+              <p>"This painting brought a new energy to my living room!" - Sarah</p>
             </div>
             <div className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-              <p>"I love how unique and personal each piece is." - Mark, LA</p>
+              <p>"I love how unique and personal each piece is." - Mark</p>
             </div>
           </div>
         </div>
@@ -230,20 +330,26 @@ export default function Home() {
         <p className="text-sm sm:text-lg mb-6">
           Sign up for exclusive offers and new art arrivals!
         </p>
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row justify-center items-center gap-4">
+        <form onSubmit={onSubmit}>
+        <div>
           <input
             type="email"
-            placeholder="Enter your email"
+            id="email"
+            name="email"
+            required
             className="p-2 rounded-lg text-black w-full sm:w-1/2 lg:w-1/3"
             value={email}
             onChange={(e)=> setEmail(e.target.value)}
           />
+        </div>
+        <div>
           <button
             type="submit"
-            className="bg-teal-600 py-2 px-6 rounded-lg hover:bg-teal-700"
+            className="bg-teal-600 py-2 px-6 rounded-lg hover:bg-teal-700 mt-3"
           >
-            Join Now
+            Submit
           </button>
+        </div>
         </form>
         {successSubmit && <p className="mt-5 text-white">You have been added to our email list!</p>}
       </section>

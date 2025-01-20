@@ -35,7 +35,6 @@ export async function POST(req: Request) {
 
     try {
         const user = await fetchUserById(username);
-        console.log(user)
 
         if (!user) {
             return NextResponse.json({ message: "User not found", success: false, status: 404 }, { status: 404 });

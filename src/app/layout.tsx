@@ -60,24 +60,18 @@ export default function Layout({ children }: { children: ReactNode }) {
             </div>
           </header>
 
-          <main className="w-full mx-auto py-2">
+          <main className="w-full mx-auto mt-2">
             {children}
           </main>
 
           <footer className="bg-gray-900 text-white py-8 px-4 sm:px-6 lg:px-8">
-            <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-              <div className="text-center sm:text-left">
-                <p>&copy; 2025 Woodland Designs</p>
-                <p>door2murrin@msn.com</p>
-                <p>630-946-6785</p>
-              </div>
-              <div className="mt-4 sm:mt-0 space-x-6">
-                <a href="#" className="hover:text-teal-500">Instagram</a>
-                <a href="#" className="hover:text-teal-500">Facebook</a>
-                <a href="#" className="hover:text-teal-500">Pinterest</a>
-              </div>
-            </div>
-          </footer>
+          <div className="container mx-auto text-center">
+            <p>door2murrin@msn.com</p>
+            <p>&copy; 2025 Woodland Designs</p>
+          </div>
+        </footer>
+
+
            {/* Add the Square SDK script and handle its load event */}
            <Script
             src="https://web.squarecdn.com/v1/square.js"

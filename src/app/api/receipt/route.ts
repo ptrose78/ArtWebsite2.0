@@ -32,9 +32,9 @@ export async function POST(req) {
         //allows an email to be sent from the chosen email 
         // using the Brevo API
         const content = {
-            sender: {email: "paultrose1@gmail.com"},
-            to: [{email: form.email}, { email: "paultrose1@gmail.com" }],
-            subject: "Art Website: Receipt",
+            sender: {email: process.env.OWNERS_EMAIL},
+            to: [{email: form.email}, {email: process.env.OWNERS_EMAIL}],
+            subject: "Woodland Designs: Receipt",
             htmlContent: htmlReceipt
         }
         const response = await client.sendTransacEmail(content);

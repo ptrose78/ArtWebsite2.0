@@ -1,4 +1,4 @@
-const getHtmlContact = (name, message, email) => 
+const getHtmlSubscriber = (email) => 
     `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -69,12 +69,10 @@ const getHtmlContact = (name, message, email) =>
     </head>
     <body>
       <div class="email-container">
-        <h3>Woodland Designs Contact Message:</h3>
-        <p mb-3>${message}</p>
-        <p>From: ${name}</p>
+        <h3>Woodland Designs New Subscriber Email:</h3>
         <a href="#" style="text-decoration: none; color: inherit; cursor: text;">${email}</a>
     </body>
     </html>
     `;
     
-    module.exports = getHtmlContact;
+    module.exports = getHtmlSubscriber;

@@ -82,7 +82,7 @@ const getHtmlReceipt = (form, cart) => {
     </head>
     <body>
       <div class="email-container">
-        <h1>Your Art Business</h1>
+        <h1>Woodland Designs</h1>
         <h2>Receipt</h2>
         <p>Thank you for your purchase! Below are the details of your order:</p>
 

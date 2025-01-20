@@ -72,11 +72,12 @@ export default function PostForm({ initialPost }: { initialPost?: Post }) {
                 postResponse = await updatePost(post.id, updatedPost);
             } else {
                 postResponse = await createPost(updatedPost);
-                setPost({ id: 0, title: '', content: '', featured: false });
+                setPost({ id: '0' , title: '', content: '', featured: false });
                 setEditorState(EditorState.createEmpty());
             }
-
+            console.log(postResponse.success)
             if (postResponse.success) {
+                console.log(postResponse.message)
                 setStatus(postResponse.message);
             }
         } catch (error) {
@@ -166,11 +167,10 @@ export default function PostForm({ initialPost }: { initialPost?: Post }) {
             {status && (
                 <div>
                     <p className="mt-4 text-sm text-gray-600">{status}</p>
-                    
                 </div>
             )}
             {(status && post.id) && (
-                <Link href="/admin/blog" className="mt-4 text-sm text-gray-500 hover:text-gray-700 flex items-center">
+                <Link href="/admin/site/blog" className="mt-4 text-sm text-gray-500 hover:text-gray-700 flex items-center">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

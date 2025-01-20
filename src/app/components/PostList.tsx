@@ -72,7 +72,7 @@ export default function PostList({ posts }) {
                     className="list-none ml-2 pb-3 rounded-lg transition-transform"
                 >
                     <Link
-                        href={`/admin/blog/${post.id}`}
+                        href={`/admin/site/blog/${post.id}`}
                         className="text-blue-600 font-medium underline hover:no-underline hover:text-blue-800 cursor-pointer"
                     >
                         {post.featured ? `*${post.title}` : post.title}

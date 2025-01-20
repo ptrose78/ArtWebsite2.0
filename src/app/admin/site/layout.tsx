@@ -1,15 +1,17 @@
 // src/app/admin/layout.tsx
-'use client';
-import Link from 'next/link';
-
 import { ReactNode } from "react";
+import AdminNavLink from "@/app/components/AdminNavLink";
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <p className="mt-4 text-sm text-gray-600 text-center">
-        <Link href="/admin/blog" className="text-blue-500 hover:underline hover:text-blue-600">blog</Link>
-      </p>
-    </div>
-  );
+    return (
+        <div className="min-h-screen bg-gray-100">
+            <nav className="p-4"> {/* Added nav for semantic correctness */}
+                <div className="mx-auto flex justify-center"> {/* Center the links */}
+                    <AdminNavLink href="/admin/site/gallery">Gallery</AdminNavLink>
+                    <AdminNavLink href="/admin/site/blog">Blogs</AdminNavLink>
+                </div>
+            </nav>
+            <main className="p-6">{children}</main>
+        </div>
+    );
 }

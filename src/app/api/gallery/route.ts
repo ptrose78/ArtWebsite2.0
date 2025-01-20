@@ -128,7 +128,7 @@ export async function PUT(req: Request) {
     const updatedFields: any = {
       title,
       price,
-      featured: featured==="true",
+      featured,
       updatedAt: new Date().toISOString(),
     };
 

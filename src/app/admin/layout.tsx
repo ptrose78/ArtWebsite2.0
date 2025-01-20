@@ -14,7 +14,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
         <h1 className="text-lg font-bold m-auto text-center -mt-4 pb-4">Admin Dashboard</h1>
       </header>
-      <main className="p-6">{children}</main>
+      <main className="p-12">{children}</main>
     </div>
   );
 }

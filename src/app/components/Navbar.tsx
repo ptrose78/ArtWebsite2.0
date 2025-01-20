@@ -30,14 +30,13 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+      <nav className="fixed top-0 left-0 w-full bg-white z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Top Row: Logo and Cart */}
-          <div className="flex items-center justify-between h-20">
+          <div className="relative flex items-center h-20">
             {/* Hamburger Icon - Left */}
             <button
               onClick={toggleMenu}
-              className="lg:hidden p-2 focus:outline-none"
+              className="lg:hidden p-2 focus:outline-none z-10"
               aria-label="Toggle navigation"
             >
               <span className="block w-6 h-0.5 bg-gray-700 mb-1"></span>
@@ -46,49 +45,52 @@ export default function Navbar() {
             </button>
 
             {/* Logo - Centered */}
-            <div className="flex justify-center w-full">
+            <div className="absolute left-1/2 transform -translate-x-1/2">
               <Link href="/" className="text-lg sm:text-2xl font-bold text-gray-700">
-                {logo ? <img
-                  src={logo ?? 'https://placehold.co/50x50'}
-                  alt="Logo"
-                  className="rounded"
-                  style={{ width: 'auto', height: '80px' }}
-                /> : <div>Loading...</div>}
+                {logo ? (
+                  <img
+                    src={logo ?? 'https://placehold.co/50x50'}
+                    alt="Logo"
+                    className="rounded"
+                    style={{ width: 'auto', height: '80px' }}
+                  />
+                ) : (
+                  <div>Loading...</div>
+                )}
               </Link>
             </div>
 
-            {/* Shopping Cart Icon - Upper-right */}
-            <div className="absolute top-4 right-4">
-              <Link href="/cart" className="relative text-gray-700 hover:text-gray-900">
-                <div className="flex items-center">
-                  <div className="text-sm font-semibold">${cart.totalPrice}</div>
-                  <ShoppingCartIcon className="w-5 h-5 text-teal-500 ml-1" />
-                </div>
+            {/* Shopping Cart Icon - Right */}
+            <div className="absolute right-4">
+              <Link href="/cart" className="flex items-center text-gray-700 hover:text-gray-900">
+                <div className="text-sm font-semibold">${cart.totalPrice}</div>
+                <ShoppingCartIcon className="w-5 h-5 text-teal-500 ml-1" />
               </Link>
             </div>
           </div>
-
+          
           {/* Navigation Links */}
-          <div className="hidden lg:flex justify-center space-x-6 text-sm sm:text-base mt-4 mb-2">
-            <Link href="/about" className="text-gray-700 hover:text-gray-900">
-              About
-            </Link>
-            <Link href="/arts" className="text-gray-700 hover:text-gray-900">
-              Gallery
-            </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-gray-900">
-              Blogs
-            </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-gray-900">
-              Contact
-            </Link>
-          </div>
+            <div className={`hidden lg:flex justify-center space-x-6 text-sm sm:text-base mt-4 mb-2`}>
+              <Link href="/about" className="text-gray-700 hover:text-gray-900">
+                About
+              </Link>
+              <Link href="/arts" className="text-gray-700 hover:text-gray-900">
+                Gallery
+              </Link>
+              <Link href="/blog" className="text-gray-700 hover:text-gray-900">
+                Blogs
+              </Link>
+              <Link href="/contact" className="text-gray-700 hover:text-gray-900">
+                Contact
+              </Link>
+            </div>
         </div>
       </nav>
 
+
       {/* Slide-in Menu for Mobile */}
       <div
-        className={`fixed top-0 left-0 w-1/4 h-full bg-gray-800 text-white transform ${
+        className={`fixed top-0 left-0 w-1/2 h-full bg-gray-800 text-white transform ${
           menuOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 z-50`}
       >
@@ -102,7 +104,7 @@ export default function Navbar() {
         </button>
 
         {/* Menu Items */}
-        <ul className="flex flex-col items-start space-y-4 mt-16 px-6">
+        <ul className="flex flex-col items-center space-y-4 mt-16 px-6 text-center">
           <li>
             <Link href="/about" className="text-gray-300 hover:text-gray-100" onClick={toggleMenu}>
               About

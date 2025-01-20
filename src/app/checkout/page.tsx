@@ -347,7 +347,7 @@ export default function CheckoutForm() {
         </p>
         <div id="card-container" className="mb-6"></div>
         <button
-          disabled={!card}
+          disabled={true}
           type="submit"
           className="bg-teal-500 text-white py-3 px-6 rounded-lg w-full hover:bg-teal-600 transition-all">
           Place Order
