@@ -7,8 +7,8 @@ interface Post {
   content: string;
 }
 
-export default async function PostAdminPage({ params }) {
-  
+export default async function PostAdminPage({ params }: { params: { id: string }}) {
+  const id = Number(params.id); // Convert id to a number
   const post = await fetchPostById(Number(params.id));
 
   if (!post) {
