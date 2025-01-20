@@ -72,7 +72,7 @@ export default function PostForm({ initialPost }: { initialPost?: Post }) {
                 postResponse = await updatePost(post.id, updatedPost);
             } else {
                 postResponse = await createPost(updatedPost);
-                setPost({ id: '0' , title: '', content: '', featured: false });
+                setPost({ id: 0 , title: '', content: '', featured: false });
                 setEditorState(EditorState.createEmpty());
             }
             console.log(postResponse.success)

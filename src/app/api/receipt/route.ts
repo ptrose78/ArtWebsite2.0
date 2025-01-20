@@ -20,6 +20,12 @@ export async function POST(req) {
             throw new Error(errorMessage);
         }
 
+        if (!process.env.OWNERS_EMAIL) {
+            const errorMessage = "Missing required environment variable: OWNERS_EMAIL";
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+          }
+
         const client = new SibApiV3Sdk.TransactionalEmailsApi();
             client.setApiKey(
               SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
