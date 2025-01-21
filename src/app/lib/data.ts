@@ -191,12 +191,6 @@ export async function fetchPosts() {
 
 export async function updatePost(id: number, post: { title?: string; content?: string; featured?: boolean; excerpt?: string; archived?: boolean }) {
   try {
-      if (!process.env.POSTGRES_URL) {
-        const errorMessage = "Missing environmental variable."
-        console.error(errorMessage)
-        throw new Error(errorMessage);
-      }
-
       const sql = neon(process.env.POSTGRES_URL);
 
       // Construct the update query dynamically to only update provided fields
@@ -227,7 +221,7 @@ export async function updatePost(id: number, post: { title?: string; content?: s
         updates.push('archived = $5');
         values.push(post.archived);
       }
-      console.log(updates.length)
+
       if (updates.length === 0) {
           return { success: true, message: "No fields to update." }; // Nothing to update
       }
@@ -238,12 +232,15 @@ export async function updatePost(id: number, post: { title?: string; content?: s
           WHERE id = $${values.length + 1}
       `;
 
-      // Debugging log
-      console.log("Executing query:", query);
 
       values.push(id); // Add the id to the values array
-     
-      revalidatePath("/admin/site/blog")
+
+      const result = await sql(query, values);
+
+      if (result.rowCount === 0) {
+          return { success: false, message: "Post not found." }; // No rows updated, post doesn't exist
+      }
+
       return { success: true, message: "Post updated successfully." };
   } catch (error) {
       console.error("Database error:", error);

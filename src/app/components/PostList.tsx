@@ -2,8 +2,9 @@
 
 import { deletePost } from "@/app/lib/data";
 import { updatePost } from "@/app/lib/data";
+import { fetchPosts } from "@/app/lib/data";
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Post {
     id?: number;
@@ -12,22 +13,22 @@ interface Post {
     featured?: boolean;
 }
 
-export default function PostList({ posts }) {
+export default function PostList({ posts, setPosts }) {
 
-    const[notification, setNotification] = useState<string>("")
+    const[notification, setNotification] = useState<string>("");
 
-    async function handleDelete(post) {
+    async function handleDelete(post: Post) {
         try {
             await deletePost(post);
-            setNotification("Deleted successfully!")
-            setTimeout(()=>setNotification(""), 3000);
-            // Optionally, refresh the page or state
-            // window.location.reload(); // Refresh the page after deletion
+            let updatedPosts = await fetchPosts();
+            console.log(updatedPosts)
+            setNotification("Deleted successfully!");
+            setTimeout(() => setNotification(""), 3000);
+            setPosts(updatedPosts);
         } catch (error) {
-            setNotification("Failed to Delete. Try again.")
-            setTimeout(()=>setNotification(""), 3000);
             console.error("Failed to delete post:", error);
-            alert("An error occurred while deleting the post.");
+            setNotification("Failed to delete. Try again.");
+            setTimeout(() => setNotification(""), 3000);
         }
     }
 
@@ -88,7 +89,7 @@ export default function PostList({ posts }) {
                         <input
                             type="checkbox"
                             name="archived"
-                            checked={post.featured}
+                            checked={!!post.featured}
                             className="mt-1 mr-2.5"
                             onChange={(e) => handleFeature(post, e.target.checked)}
                         />
@@ -96,7 +97,7 @@ export default function PostList({ posts }) {
                         <input
                             type="checkbox"
                             name="archived"
-                            checked={post.archived}
+                            checked={!!post.archived}
                             className="mt-1"
                             onChange={(e) => handleArchive(post, e.target.checked)}
                         />

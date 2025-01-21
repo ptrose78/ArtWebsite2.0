@@ -23,7 +23,7 @@ export default function Signup() {
 
             if (response.ok) {
                 // Signup successful, redirect
-                router.push('/admin/gallery');
+                router.push('/admin/site/gallery');
             } else {
                 // Signup failed, display error message and errors
                 setMessage(data.message || 'Signup failed.');
