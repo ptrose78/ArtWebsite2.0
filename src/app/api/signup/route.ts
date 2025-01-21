@@ -40,6 +40,10 @@ export async function POST(req: Request) {
         const existingUser = await fetchUserById(username);
         console.log(existingUser)
 
+        if (existingUser === null) { 
+            return NextResponse.json({ message: "No users found", success: false }, { status: 404 });
+        }
+
         if (!existingUser) {
             return NextResponse.json({ message: "Not authorized!", success: false }, { status: 400 });
         }

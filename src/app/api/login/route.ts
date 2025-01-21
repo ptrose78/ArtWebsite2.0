@@ -4,6 +4,12 @@ import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import { fetchUserById } from '@/app/lib/data';
 
+interface User {
+    id?: number;
+    username?: string;
+    password?: string; // Make password optional for cases where you don't select it
+  }
+
 const loginFormSchema = z.object({
     id: z.string(),
     username: z.string(),
@@ -12,12 +18,13 @@ const loginFormSchema = z.object({
 
 export type LoginState = {
     username: string;
-    password: string;
+    password: string | null;
 }
 
 const HandleLogin = loginFormSchema.omit({id: true});
 const SECRET_KEY = process.env.JWT_SECRET;
 const REFRESH_SECRET_KEY = process.env.JWT_REFRESH_SECRET;
+
 
 export async function POST(req: Request) {
     const formData = await req.formData();
@@ -34,10 +41,10 @@ export async function POST(req: Request) {
     const { username, password } = validatedFields.data;
 
     try {
-        const user = await fetchUserById(username);
+        const user = await fetchUserById(username) as User;
 
-        if (!user) {
-            return NextResponse.json({ message: "User not found", success: false, status: 404 }, { status: 404 });
+        if (!user || !user.password) { 
+            return NextResponse.json({ message: "No users found or invalid password", success: false }, { status: 404 });
         }
 
         const passwordMatches = await bcrypt.compare(password, user.password);

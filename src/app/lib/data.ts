@@ -170,28 +170,60 @@ export async function createPost(post){
   }
 } 
 
-export async function fetchPosts() {
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  featured: boolean;
+  excerpt: string;
+  archived: boolean;
+}
+
+export async function fetchPosts(): Promise<Post[]> {
   try {
     if (!process.env.POSTGRES_URL) {
-      const errorMessage = "Missing environmental variable."
-      console.error(errorMessage)
-      throw new Error(errorMessage);
+      const errorMessage = "Missing environmental variable.";
+      console.error(errorMessage);
+      throw new Error(errorMessage); // Throw an error for better error handling
+      return [];
     }
 
+    // Initialize Neon connection
     const sql = neon(process.env.POSTGRES_URL);
-    const posts = await sql`
-      SELECT * FROM posts`
-     return posts
-        
-  } catch(error) {
+
+    // Query the posts from the database
+    const posts = await sql `
+      SELECT * FROM posts
+    `;
+
+    // Map the raw database results to the Post interface
+    const formatDataToPost = (posts: Record<string, any>[]): Post[] => {
+      return posts.map(item => ({
+        id: item.id,
+        title: item.title,
+        content: item.content,
+        featured: item.featured ?? false,
+        excerpt: item.excerpt,
+        archived: item.archived ?? false,
+      }));
+    };
+
+    return formatDataToPost(posts);
+
+  } catch (error) {
     console.error("Database error:", error);
-    throw new Error("Failed to retrieve posts.");
+    throw new Error("Failed to retrieve posts."); // Ensure the error propagates
   }
 }
 
 export async function updatePost(id: number, post: { title?: string; content?: string; featured?: boolean; excerpt?: string; archived?: boolean }) {
   try {
-      const sql = neon(process.env.POSTGRES_URL);
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable.";
+      console.error(errorMessage);
+      throw new Error(errorMessage); // Throw an error for better error handling
+      return [];
+    }
 
       // Construct the update query dynamically to only update provided fields
       const updates: string[] = [];
@@ -232,10 +264,9 @@ export async function updatePost(id: number, post: { title?: string; content?: s
           WHERE id = $${values.length + 1}
       `;
 
-
       values.push(id); // Add the id to the values array
 
-      const result = await sql(query, values);
+      const result = await sql`${query}`;
 
       if (result.rowCount === 0) {
           return { success: false, message: "Post not found." }; // No rows updated, post doesn't exist
@@ -251,9 +282,10 @@ export async function updatePost(id: number, post: { title?: string; content?: s
 export async function deletePost(post) {
   try {
     if (!process.env.POSTGRES_URL) {
-      const errorMessage = "Missing environmental variable."
-      console.error(errorMessage)
-      throw new Error(errorMessage);
+      const errorMessage = "Missing environmental variable.";
+      console.error(errorMessage);
+      throw new Error(errorMessage); // Throw an error for better error handling
+      return [];
     }
 
     const sql = neon(process.env.POSTGRES_URL);
@@ -281,19 +313,27 @@ export async function deletePost(post) {
   }
 }
 
-export async function fetchUserById(username:string) {
+interface User {
+  id?: number;
+  username?: string;
+  password?: string; // Make password optional for cases where you don't select it
+}
+
+export async function fetchUserById(username: string) {
    
     try {
-        if (!process.env.POSTGRES_URL) {
-            const errorMessage = "Missing environmental variable."
-            console.error(errorMessage)
-            throw new Error(errorMessage);
-        }
+      if (!process.env.POSTGRES_URL) {
+        const errorMessage = "Missing environmental variable.";
+        console.error(errorMessage);
+        throw new Error(errorMessage); // Throw an error for better error handling
+        return [];
+      }
 
+    
         const sql = neon(process.env.POSTGRES_URL);
         const result = await sql`
         SELECT * FROM users WHERE username = ${username}
-        `;
+        ` as unknown as User[];
         console.log('result:', result[0])
         return result.length > 0 ? result[0] : null;
     

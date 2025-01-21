@@ -9,6 +9,7 @@ interface Post {
     title: string;
     content: string; 
     featured: boolean;
+    excerpt: string;
     archived: boolean;
 }
 

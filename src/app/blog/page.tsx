@@ -2,9 +2,18 @@ import PostCard from "@/app/components/PostCard";
 import FeaturedPost from "@/app/components/FeaturedPost";
 import { fetchPosts } from "@/app/lib/data"
 
+interface Post {
+    id: number;
+    title: string;
+    content: string; 
+    featured: boolean;
+    excerpt: string;
+    archived: boolean;
+}
+
 export default async function BlogPage() {
     // Fetch data
-    const posts = await fetchPosts();
+    const posts: Post[] = await fetchPosts()
     
     const featuredPost = posts.find((post) => post.featured === true);
     const otherPosts = posts.filter((post) => !post?.featured && !post?.archived);
