@@ -279,7 +279,7 @@ export default function Home() {
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-center mb-8">
           Featured Artworks
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {/* Artwork Cards */}
           {galleryItems.map((art) => 
             art.featured ? (
@@ -301,7 +301,7 @@ export default function Home() {
                   <p className="text-gray-600 font-semibold">{`$${parseFloat(art.price).toFixed(2)}`}</p>
                   
                   {/* Add a flex container for the buttons */}
-                  <div className="flex justify-start space-x-4 mt-4">
+                  <div className="flex justify-center space-x-4 mt-4">
                     <AddToCartButton art={art} />
                     <OrderNowButton art={art} />
                   </div>

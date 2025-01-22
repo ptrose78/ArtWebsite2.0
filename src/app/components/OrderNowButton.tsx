@@ -16,7 +16,7 @@ export default function OrderNowButton({art}: any) {
 return (
     <div className="flex justify-center space-x-4 items-center mt-6">
         <button
-            className="text-white bg-teal-500 hover:bg-teal-600 px-6 py-3 rounded-full text-sm font-medium transition-all"
+            className="text-white bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded-full text-md font-medium transition-all"
             onClick={() => {
             handleOrderNow(art);
             }}
