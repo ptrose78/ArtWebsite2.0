@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import { addToCart } from '../../store/features/cartSlice'; // Path to your cart slice
 import { useState, useEffect } from 'react';
+import AddToCartButton from '@/app/components/AddToCartButton';
+import OrderNowButton from '@/app/components/OrderNowButton';
 
 interface GalleryItem {
   id: number | string; // Accepts both numbers and strings
@@ -84,28 +86,14 @@ export default function GalleryPage() {
               <img
                 src={art.image_url ?? 'https://placehold.co/200x200'}
                 alt={art.title}
-                className="w-full h-56 object-cover rounded-lg slide-up"
+                className="w-full h-56 object-cover rounded-lg image-slide"
               />
               <h2 className="text-xl font-medium text-gray-800 mt-4">{art.title}</h2>
               <p className="text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
 
               <div className="flex justify-center space-x-4 items-center mt-6">
-                <button
-                  className="text-white bg-teal-500 hover:bg-teal-600 px-6 py-3 rounded-full text-sm font-medium transition-all"
-                  onClick={() => {
-                    handleAddToCart(art);
-                  }}
-                >
-                  Add To Cart
-                </button>
-                <button
-                  className="text-white bg-teal-500 hover:bg-teal-600 px-6 py-3 rounded-full text-sm font-medium transition-all"
-                  onClick={() => {
-                    handleOrderNow(art);
-                  }}
-                >
-                  Order Now
-                </button>
+                <AddToCartButton art={art} />
+                <OrderNowButton art={art} />
               </div>
             </div>
           ))

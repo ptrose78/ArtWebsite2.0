@@ -13,7 +13,7 @@ interface Post {
 
 export default async function BlogPage() {
     // Fetch data
-    const posts: Post[] = await fetchPosts()
+    const posts: Post[] = await fetchPosts();
     
     const featuredPost = posts.find((post) => post.featured === true);
     const otherPosts = posts.filter((post) => !post?.featured && !post?.archived);

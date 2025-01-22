@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { fetchArts, addSubscribers } from '@/app/lib/data'
 import { useEffect, useState, useRef, FormEvent  } from 'react';
+import AddToCartButton from '@/app/components/AddToCartButton';
+import OrderNowButton from '@/app/components/OrderNowButton';
 
 interface GalleryItem {
   id: number | string; // Accepts both numbers and strings
@@ -297,9 +299,16 @@ export default function Home() {
                     {art.title}
                   </h3>
                   <p className="text-gray-600 font-semibold">{`$${parseFloat(art.price).toFixed(2)}`}</p>
+                  
+                  {/* Add a flex container for the buttons */}
+                  <div className="flex justify-start space-x-4 mt-4">
+                    <AddToCartButton art={art} />
+                    <OrderNowButton art={art} />
+                  </div>
                 </div>
+                
               </div>
-            ) : null
+          ) : null
           )}
         </div>
       </section>
@@ -313,10 +322,10 @@ export default function Home() {
           </h2>
           <div className="space-y-6">
             <div className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-              <p>"This painting brought a new energy to my living room!" - Sarah</p>
+              <p>"This painting brought a new energy to my living room!" - Stacey, IL</p>
             </div>
             <div className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-              <p>"I love how unique and personal each piece is." - Mark</p>
+              <p>"I love how unique and personal each piece is." - Beth, WI</p>
             </div>
           </div>
         </div>
