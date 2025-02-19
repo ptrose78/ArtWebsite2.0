@@ -224,13 +224,13 @@ export default function GalleryList() {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-col items-center sm:flex-row sm:items-start space-y-2 sm:space-y-0 sm:space-x-4"> {/* Centering and flex-col/row */}
                   <img
                     src={item.image_url}
                     alt={item.title}
                     className="w-20 h-20 object-cover rounded-md"
                   />
-                  <div className="flex-1">
+                  <div className="flex-1 text-center sm:text-left"> {/* Text alignment */}
                     <h3 className="text-lg font-medium text-gray-800">{item.title}</h3>
                     <p className="text-sm text-gray-600">{item.price}</p>
                     <p className="text-sm text-gray-600">{item.width} x {item.length}</p>
@@ -242,7 +242,7 @@ export default function GalleryList() {
                       {item.featured ? "Featured" : "Not Featured"}
                     </p>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex items-center space-x-2"> {/* Buttons container - always horizontal */}
                     <button
                       onClick={() => handleEdit(item)}
                       className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"

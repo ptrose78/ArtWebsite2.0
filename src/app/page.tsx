@@ -45,13 +45,13 @@ export default function Home() {
 
    const slides = [
     {
-      mainImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/IMG_2334.jpg?alt=media&token=4da842f3-d12b-4540-bfc9-49b09d08da88',
-      backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_vp8fjyvp8fjyvp8f.jfif?alt=media&token=07d83a9e-c53b-46a8-8471-9ab29cca88d7',
-    },
-    {
       mainImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/IMG_2332.jpg?alt=media&token=a434ee96-6a68-4a6b-a641-25ccc09bf2b3',
       backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_c8p1g0c8p1g0c8p1.jfif?alt=media&token=e2254ad1-f836-4f46-820a-b51bf50e305a'
     },
+    {
+      mainImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/IMG_2334.jpg?alt=media&token=4da842f3-d12b-4540-bfc9-49b09d08da88',
+      backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_vp8fjyvp8fjyvp8f.jfif?alt=media&token=07d83a9e-c53b-46a8-8471-9ab29cca88d7',
+    },  
     {
       mainImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/IMG_2333.jpg?alt=media&token=8f10c9dc-51c4-4c5a-99ee-006c8b3607f8',
       backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_c8p1g0c8p1g0c8p1.jfif?alt=media&token=e2254ad1-f836-4f46-820a-b51bf50e305a',
