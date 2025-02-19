@@ -12,6 +12,8 @@ interface GalleryItem {
   image_url: string;
   price: string;
   title: string;
+  width: string;
+  length: string;
   date: string | null;
   featured: boolean;
 }
@@ -90,8 +92,8 @@ export default function GalleryPage() {
               />
               <h2 className="text-xl font-medium text-gray-800 mt-4">{art.title}</h2>
               <p className="text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
-
-              <div className="flex justify-center space-x-4 items-center mt-6">
+              <p className="text-gray-600 font-semibold text-lg mt-2">{`${art.width} x ${art.length}`}</p>
+              <div className="flex justify-center space-x-4 items-center">
                 <AddToCartButton art={art} />
                 <OrderNowButton art={art} />
               </div>

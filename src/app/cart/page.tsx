@@ -37,6 +37,7 @@ export default function Page() {
                   alt={`Image of ${item.title}`}
                   className="w-16 h-16 object-cover mr-4 rounded-md shadow-sm"
                 />
+                <p className="text-gray-600 font-semibold text-lg mt-2">{`${item.width} x ${item.length}`}</p>
               </div>
               <div className="text-left">
                 <span className="text-lg font-semibold text-gray-800">{item.title}</span>

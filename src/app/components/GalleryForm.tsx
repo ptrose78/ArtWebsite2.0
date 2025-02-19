@@ -5,6 +5,8 @@ interface GalleryItem {
   id?: string;
   title: string;
   price: string;
+  width: string;
+  length: string;
   featured: boolean;
   file: File | null;
 }
@@ -14,6 +16,8 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
     title: existingItem?.title || "",
     price: existingItem?.price || "",
     featured: existingItem?.featured || false,
+    width: existingItem?.width || "",
+    length: existingItem?.length || "",
     file: null,
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +42,8 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
       formDataToSubmit.append("file", formData.file as Blob);
       formDataToSubmit.append("title", formData.title);
       formDataToSubmit.append("price", formData.price);
+      formDataToSubmit.append("width", formData.width);
+      formDataToSubmit.append("length", formData.length);
       formDataToSubmit.append("featured", String(formData.featured));
 
       const response = existingItem
@@ -96,6 +102,36 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
           id="price"
           name="price"
           value={formData.price}
+          onChange={handleChange}
+          required
+          className="mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="width" className="text-sm font-medium text-gray-600">
+          Width
+        </label>
+        <input
+          type="text"
+          id="width"
+          name="width"
+          value={formData.width}
+          onChange={handleChange}
+          required
+          className="mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="length" className="text-sm font-medium text-gray-600">
+          Length
+        </label>
+        <input
+          type="text"
+          id="length"
+          name="length"
+          value={formData.length}
           onChange={handleChange}
           required
           className="mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"

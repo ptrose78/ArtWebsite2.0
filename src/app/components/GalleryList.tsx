@@ -5,6 +5,8 @@ interface GalleryItem {
   id: string;
   title: string;
   price: string;
+  width: string;
+  length: string;
   featured: boolean;
   image_url: string;
 }
@@ -163,6 +165,30 @@ export default function GalleryList() {
                       className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Width:</label>
+                    <input
+                      type="text"
+                      value={editingItem.width}
+                      onChange={(e) =>
+                        setEditingItem({ ...editingItem, width: e.target.value })
+                      }
+                      className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Length:</label>
+                    <input
+                      type="text"
+                      value={editingItem.length}
+                      onChange={(e) =>
+                        setEditingItem({ ...editingItem, length: e.target.value })
+                      }
+                      className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+                    />
+                  </div>
+
                   <div className="flex items-center space-x-2">
                     <input
                       type="checkbox"
@@ -207,6 +233,7 @@ export default function GalleryList() {
                   <div className="flex-1">
                     <h3 className="text-lg font-medium text-gray-800">{item.title}</h3>
                     <p className="text-sm text-gray-600">{item.price}</p>
+                    <p className="text-sm text-gray-600">{item.width} x {item.length}</p>
                     <p
                       className={`text-sm ${
                         item.featured ? "text-green-600" : "text-red-600"

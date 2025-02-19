@@ -12,6 +12,8 @@ interface GalleryItem {
   image_url: string;
   price: string;
   title: string;
+  width: string;
+  length: string;
   date: string | null;
   featured: string;
 }
@@ -299,6 +301,7 @@ export default function Home() {
                     {art.title}
                   </h3>
                   <p className="text-gray-600 font-semibold">{`$${parseFloat(art.price).toFixed(2)}`}</p>
+                  <p className="text-gray-600 font-semibold">{`${art.width} x ${art.length}`}</p>
                   
                   {/* Add a flex container for the buttons */}
                   <div className="flex justify-center space-x-4 mt-4">

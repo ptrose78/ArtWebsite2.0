@@ -324,14 +324,19 @@ export default function CheckoutForm() {
         <h3 className="text-lg font-semibold mb-3 text-teal-600">Order Summary</h3>
         <ul className="divide-y divide-gray-200">
           {cart.items.map((item) => (
-            <li key={item.id} className="flex items-center py-4">
+            <li key={item.id} className="flex sm:flex-row items-start items-center py-4">
               <img
                 src={item.image_url || 'https://placehold.co/10'}
                 alt={`Image of ${item.title}`}
-                className="w-16 h-16 object-cover rounded-md mr-4"
+                className="w-16 h-16 object-cover rounded-md mr-4 sm:mr-0 sm:mb-0"
               />
-              <p className="text-gray-700 flex-1">{item.title}</p>
-              <p className="text-gray-700 font-bold">${item.price}</p>
+              <div className="sm:ml-4">
+                <p className="text-gray-700">{item.title}</p>
+                <p className="text-gray-500 text-sm">{`${item.width} x ${item.length}`}</p>
+              </div>
+              <div className="ml-auto">
+                <p className="text-gray-700 font-bold">${item.price}</p>
+              </div>
             </li>
           ))}
         </ul>

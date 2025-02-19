@@ -106,22 +106,22 @@ export default function Navbar() {
         {/* Menu Items */}
         <ul className="flex flex-col items-center space-y-4 mt-16 px-6 text-center">
           <li>
-            <Link href="/about" className="text-gray-300 hover:text-gray-100" onClick={toggleMenu}>
+            <Link href="/about" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               About
             </Link>
           </li>
           <li>
-            <Link href="/arts" className="text-gray-300 hover:text-gray-100" onClick={toggleMenu}>
+            <Link href="/arts" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Gallery
             </Link>
           </li>
           <li>
-            <Link href="/blog" className="text-gray-300 hover:text-gray-100" onClick={toggleMenu}>
+            <Link href="/blog" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Blogs
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="text-gray-300 hover:text-gray-100" onClick={toggleMenu}>
+            <Link href="/contact" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Contact
             </Link>
           </li>

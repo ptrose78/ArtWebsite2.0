@@ -35,11 +35,13 @@ export async function POST(req: Request) {
 
     const title = formData.get('title')?.toString();
     const price = formData.get('price')?.toString();
+    const width = formData.get('width')?.toString();
+    const length = formData.get('length')?.toString();
     const featured = formData.get('featured')?.toString();
     const file = formData.get('file') as File;
    
     // Validation
-    if (!title || !price || !featured || !file) {
+    if (!title || !price || !featured || !file || !width || !length) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
     
@@ -65,6 +67,8 @@ export async function POST(req: Request) {
     const galleryItem = {
       title,
       price,
+      width,
+      length,
       featured: featured==="true",
       image_url: downloadURL,
       date: new Date().toISOString(),
@@ -115,10 +119,10 @@ export async function PUT(req: Request) {
     // Parse JSON from the request body
     const body = await req.json();
 
-    const { id, title, price, featured, image_url, file } = body;
+    const { id, title, price, featured, image_url, file, width, length } = body;
 
     // Validate required fields
-    if (!id || !title || !price) {
+    if (!id || !title || !price || !width || !length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -128,6 +132,8 @@ export async function PUT(req: Request) {
     const updatedFields: any = {
       title,
       price,
+      width,
+      length,
       featured,
       updatedAt: new Date().toISOString(),
     };
