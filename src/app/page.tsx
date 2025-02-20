@@ -110,7 +110,7 @@ export default function Home() {
       }
        else {  // For larger screens
         setImagePosition({
-          top: "15%", // Move the image 14% from the top
+          top: "9%", // Move the image 14% from the top
           left: "55%", // Move the image 45% from the left
           transform: "translate(-50%, -10%)", // Adjust for more consistent centering
         });
