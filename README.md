@@ -29,15 +29,22 @@ A custom e-commerce platform for artists to showcase and sell their artwork, fea
 ```
 ArtWebsite2.0/
 ├── src/
-│   ├── app/              # Next.js app directory
-│   │   ├── admin/        # Admin CMS routes
-│   │   ├── api/          # API endpoints
-│   │   ├── arts/         # Gallery pages
-│   │   ├── cart/         # Shopping cart
-│   │   ├── checkout/     # Checkout process
-│   │   └── components/   # Reusable components
-│   ├── store/            # Redux store configuration
-│   └── lib/              # Utility functions
+│   ├── app/                 # Next.js app directory
+│   │   ├── about/           # About page
+│   │   ├── admin/           # Admin CMS routes and components
+│   │   ├── api/             # API endpoints
+│   │   ├── arts/            # Gallery and artwork display
+│   │   ├── blog/            # Blog section
+│   │   ├── cart/            # Shopping cart functionality
+│   │   ├── checkout/        # Checkout process and payment
+│   │   ├── components/      # Shared components
+│   │   ├── contact/         # Contact form and information
+│   │   ├── lib/             # Core utilities and data functions
+│   │   ├── ui/              # UI components and layouts
+│   │   └── utils/           # Helper functions and utilities
+│   ├── assets/              # Logos and images           
+│   ├── store/               # Redux store configuration
+│   └── types/               # TypeScript type definitions
 ```
 
 ## Getting Started

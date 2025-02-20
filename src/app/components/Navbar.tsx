@@ -70,17 +70,17 @@ export default function Navbar() {
           </div>
           
           {/* Navigation Links */}
-            <div className={`hidden lg:flex justify-center space-x-6 text-sm sm:text-base mt-4 mb-2`}>
-              <Link href="/about" className="text-gray-700 hover:text-gray-900">
+            <div className={`hidden lg:flex justify-center md:space-x-12 text-sm sm:text-base mt-4 mb-2`}>
+              <Link href="/about" className="md:text-xl text-gray-700 hover:text-gray-900">
                 About
               </Link>
-              <Link href="/arts" className="text-gray-700 hover:text-gray-900">
+              <Link href="/arts" className="md:text-xl text-gray-700 hover:text-gray-900">
                 Gallery
               </Link>
-              <Link href="/blog" className="text-gray-700 hover:text-gray-900">
+              <Link href="/blog" className="md:text-xl text-gray-700 hover:text-gray-900">
                 Blogs
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-gray-900">
+              <Link href="/contact" className="md:text-xl text-gray-700 hover:text-gray-900">
                 Contact
               </Link>
             </div>

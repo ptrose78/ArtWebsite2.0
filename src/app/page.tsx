@@ -50,12 +50,12 @@ export default function Home() {
     },
     {
       mainImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/IMG_2334.jpg?alt=media&token=4da842f3-d12b-4540-bfc9-49b09d08da88',
-      backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_vp8fjyvp8fjyvp8f.jfif?alt=media&token=07d83a9e-c53b-46a8-8471-9ab29cca88d7',
+      backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_bz9uz3bz9uz3bz9u.jfif?alt=media&token=caf3ae24-e307-476a-b980-cea21e6633e8',
     },  
     {
       mainImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/IMG_2333.jpg?alt=media&token=8f10c9dc-51c4-4c5a-99ee-006c8b3607f8',
-      backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_c8p1g0c8p1g0c8p1.jfif?alt=media&token=e2254ad1-f836-4f46-820a-b51bf50e305a',
-    },
+      backgroundImage: 'https://firebasestorage.googleapis.com/v0/b/artwebsite-eebdb.firebasestorage.app/o/Gemini_Generated_Image_3y678c3y678c3y67.jfif?alt=media&token=d696325b-9fd2-4675-817f-5c6903a36966'
+    }
   ];
 
   const fetchGalleryItems = async () => {
@@ -91,7 +91,7 @@ export default function Home() {
         });
       } else if (window.innerWidth <= 768) {  // For smaller screens
         setImagePosition({
-          top: "12%",  // Move the image 10% from the top
+          top: "10%",  // Move the image 10% from the top
           left: "55%", // Center the image horizontally
           transform: "translate(-50%, -10%)", // Adjust for more consistent centering
         });
@@ -120,7 +120,7 @@ export default function Home() {
         if (window.innerWidth <= 768) {  // For smaller screens
           setDynamicHeight("clamp(20%, 50%, 400px)");  // Shorter height on small screens
         } else {  // For larger screens
-          setDynamicHeight("clamp(20%, 67%, 500px)");  // Keep the height similar to current on larger screens
+          setDynamicHeight("clamp(20%, 67%, 550px)");  // Keep the height similar to current on larger screens
         }
       };
 
@@ -245,10 +245,10 @@ export default function Home() {
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
           Woodland Designs
         </h1>
-        <p className="sm:text-lg mb-8">Discover Unique Art for Your Space</p>
+        <p className="sm:text-xl md:text-xl lg:text-3xl mb-8">Discover Unique Art for Your Space</p>
         <a
           href="/arts"
-          className="bg-teal-500 text-white py-2 px-6 rounded-full hover:bg-teal-600 text-sm sm:text-base"
+          className="bg-teal-500 text-white py-2 px-6 rounded-full hover:bg-teal-600 sm:text-xl md:text-2xl lg:text-2xl"
         >
           Explore Our Collection
         </a>
@@ -295,19 +295,14 @@ export default function Home() {
                   className="w-full h-48 sm:h-64 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-lg sm:text-xl font-semibold">
-                    {art.title}
-                  </h3>
-                  <p className="text-gray-600 font-semibold">{`$${parseFloat(art.price).toFixed(2)}`}</p>
-                  <p className="text-gray-600 font-semibold">{`${art.width} x ${art.length}`}</p>
-                  
-                  {/* Add a flex container for the buttons */}
-                  <div className="flex justify-center space-x-4 mt-4">
+                  <h2 className="text-center text-xl font-medium text-gray-800">{art.title}</h2>
+                  <p className="text-center text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
+                  <p className="text-center text-gray-600 font-semibold text-lg mt-2">{`${art.width} x ${art.length}`}</p>
+                  <div className="flex justify-center space-x-4 items-center mt-2">
                     <AddToCartButton art={art} />
                     <OrderNowButton art={art} />
                   </div>
                 </div>
-                
               </div>
           ) : null
           )}

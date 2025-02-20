@@ -90,10 +90,10 @@ export default function GalleryPage() {
                 alt={art.title}
                 className="w-full h-56 object-cover rounded-lg image-slide"
               />
-              <h2 className="text-xl font-medium text-gray-800 mt-4">{art.title}</h2>
-              <p className="text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
-              <p className="text-gray-600 font-semibold text-lg mt-2">{`${art.width} x ${art.length}`}</p>
-              <div className="flex justify-center space-x-4 items-center">
+              <h2 className="text-center text-xl font-medium text-gray-800 mt-4">{art.title}</h2>
+              <p className="text-center text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
+              <p className="text-center text-gray-600 font-semibold text-lg mt-2">{`${art.width} x ${art.length}`}</p>
+              <div className="flex justify-center space-x-4 items-center mt-2">
                 <AddToCartButton art={art} />
                 <OrderNowButton art={art} />
               </div>
