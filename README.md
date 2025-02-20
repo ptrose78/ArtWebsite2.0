@@ -1,37 +1,90 @@
-# ArtWebsite
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ArtWebsite 2.0
+A custom e-commerce platform for artists to showcase and sell their artwork, featuring a built-in CMS for content management.
+
+## Core Features
+- Dynamic artwork gallery with featured items display
+- Secure e-commerce functionality with Square payment integration
+- Responsive design optimized for all devices
+- Custom CMS for artwork management
+- Email notifications for orders and subscriptions
+- Shopping cart functionality with Redux state management
+
+## Tech Stack
+- **Frontend:**
+  - Next.js 14 (App Router)
+  - TypeScript
+  - Redux for state management
+  - Tailwind CSS for styling
+
+- **Backend:**
+  - Next.js API Routes
+  - Square Payments API
+  - Email service integration
+
+- **Authentication:**
+  - Custom admin authentication system
+  - Secure session management
+
+## Project Structure
+```
+ArtWebsite2.0/
+├── src/
+│   ├── app/              # Next.js app directory
+│   │   ├── admin/        # Admin CMS routes
+│   │   ├── api/          # API endpoints
+│   │   ├── arts/         # Gallery pages
+│   │   ├── cart/         # Shopping cart
+│   │   ├── checkout/     # Checkout process
+│   │   └── components/   # Reusable components
+│   ├── store/            # Redux store configuration
+│   └── lib/              # Utility functions
+```
 
 ## Getting Started
 
-First, run the development server:
-
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [repository-url]
+cd ArtWebsite2.0
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Visit [http://localhost:3000](http://localhost:3000) to view the application.
 
-## Learn More
+## Key Features Implementation
 
-To learn more about Next.js, take a look at the following resources:
+### E-commerce
+- Shopping cart with Redux state management
+- Secure checkout process using Square Payments
+- Order confirmation emails
+- Product image management
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Admin CMS
+- Secure admin login system
+- Artwork management interface
+- Order tracking and management
+- Content management for featured items
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### User Experience
+- Responsive image galleries
+- Dynamic featured artwork carousel
+- Real-time cart updates
+- Mobile-optimized layouts
 
-## Deploy on Vercel
+## Contributing
+1. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+2. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+3. Push to the branch (`git push origin feature/AmazingFeature`)
+4. Open a Pull Request
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is licensed under the MIT License.
