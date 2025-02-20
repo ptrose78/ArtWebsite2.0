@@ -342,3 +342,96 @@ export async function fetchUserById(username: string) {
         return { message: "Failed to fetch user.", status: 500 };
     }
 }
+
+export async function storeToken(email: string, token: string) {
+  try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable.";
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    const sql = neon(process.env.POSTGRES_URL);
+    console.log('email:', email)
+    console.log('token:', token)
+
+    const result = await sql`
+    INSERT INTO password_resets (email, token)
+    VALUES (${email}, ${token})
+    `;
+    console.log('result:', result)
+    return result;
+  } catch(error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to store token.");
+  }
+}
+
+export async function findEmailByToken(token: string) {
+  try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable.";
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    const sql = neon(process.env.POSTGRES_URL);
+
+    const result = await sql`
+    SELECT email FROM password_resets WHERE token = ${token}
+    `;
+
+    return result.length > 0 ? result[0].email : null;
+  } catch(error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to find email by token.");
+  }
+}
+
+export async function updateUserPassword(email: string, hashedPassword: string) {
+
+  try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    console.log('email:', email)
+    console.log('hashedPassword:', hashedPassword)
+
+    const sql = neon(process.env.POSTGRES_URL);
+
+    const result = await sql`
+    UPDATE users
+    SET password = ${hashedPassword}
+    WHERE username = ${email}
+    `
+    console.log('result:', result)
+    return result;
+  } catch(error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to update user password.")
+  }
+}
+
+export async function removeToken(token: string) {
+  try {
+    if (!process.env.POSTGRES_URL) {
+      const errorMessage = "Missing environmental variable."
+      console.error(errorMessage);
+      throw new Error(errorMessage);      
+    }
+
+    const sql = neon(process.env.POSTGRES_URL);
+
+    const result = await sql`
+    DELETE FROM password_resets WHERE token = ${token}
+    `
+    return result;
+  } catch(error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to remove token.")
+  }
+} 
+  

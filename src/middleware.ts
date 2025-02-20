@@ -18,7 +18,7 @@ export function middleware(req: NextRequest) {
     }
 
      // Check if request is for login and redirect if already on login page
-     if (url.pathname === "/admin/auth/login" || url.pathname === "/admin/auth/signup") {
+     if (url.pathname === "/admin/auth/login" || url.pathname === "/admin/auth/signup" || url.pathname === "/admin/auth/forgot-password" || url.pathname === "/admin/auth/reset-password") {
       return NextResponse.next(); // Allow access to login page itself
     }
     

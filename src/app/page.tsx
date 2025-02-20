@@ -161,8 +161,6 @@ export default function Home() {
              body: JSON.stringify(formObject),
            })
 
-           console.log(responseSubscriberEmail)
-
           if ( responseSubscriberEmail.ok && responseSubscriberDB.success) {
             setSuccessSubmit(true)
           }

@@ -1,24 +1,17 @@
 import { NextResponse } from 'next/server';
 import * as SibApiV3Sdk from "@sendinblue/client";
-import getHtmlSubscriber from "@/app/utils/getHtmlSubscriber"
-import { Carter_One } from 'next/font/google';
 
-export async function POST(req: Request) {
+export async function sendEmail(email: string, subject: string, htmlContent: string) {
   console.log('post request received')
 
   try {
-    
-    const { email} = await req.json();
-    console.log(email)
-    if (!email) {
+    if (!email || !subject || !htmlContent) {
       return NextResponse.json(
         { success: false, error: 'All fields are required.' },
         { status: 400 }
       );
     }
     
-    const htmlContact = getHtmlSubscriber(email);
-
     if (!process.env.YOUR_API_V3_KEY) {
       const errorMessage = "Missing required environment variable: YOUR_API_V3_KEY";
       console.error(errorMessage);
@@ -39,9 +32,9 @@ export async function POST(req: Request) {
 
     const content = {
       sender: { email: process.env.OWNERS_EMAIL },
-      to: [{ email: process.env.OWNERS_EMAIL }], 
-      subject: "Woodland Designs: New Subscriber!",
-      htmlContent: htmlContact,
+      to: [{ email: email }], 
+      subject: subject,
+      htmlContent: htmlContent,
     };    
 
     const response = await client.sendTransacEmail(content);

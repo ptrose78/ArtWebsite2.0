@@ -27,9 +27,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-    console.log("Token:", token);
-    // console.log("Cart:", cart);
-
+    
     const response = await client.paymentsApi.createPayment({
       sourceId: token,
       idempotencyKey: crypto.randomUUID(), // Generate a unique ID
@@ -43,7 +41,7 @@ export async function POST(req) {
     const jsonResponse = JSON.parse(JSON.stringify(response.result, (key, value) =>
       typeof value === 'bigint'
           ? value.toString()
-          : value // return everything else unchanged
+          : value 
   ));
   console.log(jsonResponse)
   return NextResponse.json({ message: "OK", response: jsonResponse }, { status: 200 });
