@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     await storeToken(email, token);
 
     // Create a reset link
-    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/admin/auth/reset-password?token=${token}`;
+    const resetLink = `${process.env.BASE_URL}/admin/auth/reset-password?token=${token}`;
 
     // Send email
     await sendEmail(email, "Password Reset", `Click here to reset your password: ${resetLink}`);
