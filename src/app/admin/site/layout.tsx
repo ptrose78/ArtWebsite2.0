@@ -8,6 +8,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
             <nav className="p-4"> {/* Added nav for semantic correctness */}
                 <div className="mx-auto flex justify-center"> {/* Center the links */}
                     <AdminNavLink href="/admin/site/gallery">Gallery</AdminNavLink>
+                    <AdminNavLink href="/admin/site/cards">Cards</AdminNavLink>
                     <AdminNavLink href="/admin/site/blog">Blogs</AdminNavLink>
                 </div>
             </nav>

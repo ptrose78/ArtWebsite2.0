@@ -77,6 +77,9 @@ export default function Navbar() {
               <Link href="/arts" className="md:text-xl text-gray-700 hover:text-gray-900">
                 Gallery
               </Link>
+              <Link href="/cards" className="md:text-xl text-gray-700 hover:text-gray-900">
+                Cards
+              </Link>
               <Link href="/blog" className="md:text-xl text-gray-700 hover:text-gray-900">
                 Blogs
               </Link>
@@ -86,7 +89,6 @@ export default function Navbar() {
             </div>
         </div>
       </nav>
-
 
       {/* Slide-in Menu for Mobile */}
       <div
@@ -106,22 +108,25 @@ export default function Navbar() {
         {/* Menu Items */}
         <ul className="flex flex-col items-center space-y-4 mt-16 px-6 text-center">
           <li>
-            <Link href="/about" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
+            <Link href="/about" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               About
             </Link>
           </li>
           <li>
-            <Link href="/arts" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
+            <Link href="/arts" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Gallery
             </Link>
           </li>
+          <Link href="/cards" className="md:text-xl text-gray-300 hover:text-gray-100">
+                Cards
+          </Link>
           <li>
-            <Link href="/blog" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
+            <Link href="/blog" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Blogs
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
+            <Link href="/contact" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Contact
             </Link>
           </li>

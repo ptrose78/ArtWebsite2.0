@@ -7,46 +7,44 @@ import { useState, useEffect } from 'react';
 import AddToCartButton from '@/app/components/AddToCartButton';
 import OrderNowButton from '@/app/components/OrderNowButton';
 
-interface GalleryItem {
+interface CardItem {
   id: number | string; // Accepts both numbers and strings
   image_url: string;
   price: string;
   title: string;
-  width: string;
-  length: string;
-  date: string | null;
+  size: string;
+  description: string;
   featured: boolean;
 }
 
-export default function GalleryPage() {
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+export default function CardGalleryPage() {
+  const [cardItems, setCardItems] = useState<CardItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const fetchGalleryItems = async () => {
+  const fetchCardItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/gallery');
+      const response = await fetch('/api/cards');
       const result = await response.json();
       if (response.ok) {
-        setGalleryItems(result.galleryItems);
+        setCardItems(result.cardItems);
       } else {
-        alert(`Error fetching gallery items: ${result.error}`);
+        alert(`Error fetching card items: ${result.error}`);
       }
     } catch (error) {
-      console.error('Error fetching gallery items:', error);
-      alert('An error occurred while fetching gallery items.');
+      console.error('Error fetching card items:', error);
+      alert('An error occurred while fetching card items.');
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchGalleryItems();
+    fetchCardItems();
   }, []);
 
-  // Create an observer to trigger the slide-up animation when elements enter the viewport
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -54,7 +52,7 @@ export default function GalleryPage() {
           entry.target.classList.add('slide-up');
         }
       });
-    }, { threshold: 0.5 }); // Trigger when 50% of the element is in view
+    }, { threshold: 0.5 });
 
     const elements = document.querySelectorAll('.image-slide');
     elements.forEach((element) => {
@@ -62,7 +60,6 @@ export default function GalleryPage() {
     });
 
     return () => {
-      // Clean up the observer
       elements.forEach((element) => {
         observer.unobserve(element);
       });
@@ -71,27 +68,28 @@ export default function GalleryPage() {
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl text-center font-semibold text-gray-700 mb-8">Art Gallery</h1>
+      <h1 className="text-3xl text-center font-semibold text-gray-700 mb-8">Cards Collection</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {galleryItems.length > 0 ? (
-          galleryItems.map((art) => (
-            <div key={art.id} className="bg-white border border-gray-200 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all">
+        {cardItems.length > 0 ? (
+          cardItems.map((card) => (
+            <div key={card.id} className="bg-white border border-gray-200 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all">
               <img
-                src={art.image_url ?? 'https://placehold.co/200x200'}
-                alt={art.title}
+                src={card.image_url ?? 'https://placehold.co/200x200'}
+                alt={card.title}
                 className="w-full h-56 object-cover rounded-lg image-slide"
               />
-              <h2 className="text-center text-xl font-medium text-gray-800 mt-4">{art.title}</h2>
-              <p className="text-center text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
-              <p className="text-center text-gray-600 font-semibold text-lg mt-2">{`${art.width} x ${art.length}`}</p>
+              <h2 className="text-center text-xl font-medium text-gray-800 mt-4">{card.title}</h2>
+              <p className="text-center text-gray-600 font-semibold text-lg mt-2">${parseFloat(card.price).toFixed(2)}</p>
+              <p className="text-center text-gray-600 font-semibold text-lg mt-2">Size: {card.size}</p>
+              <p className="text-center text-gray-500 text-sm mt-2">{card.description}</p>
               <div className="flex justify-center space-x-4 items-center mt-2">
-                <AddToCartButton item={art} />
-                <OrderNowButton item={art} />
+                <AddToCartButton item={card} />
+                <OrderNowButton item={card} />
               </div>
             </div>
           ))
         ) : (
-          <p>Loading...</p> // Handle loading state
+          <p>Loading...</p>
         )}
       </div>
     </div>
