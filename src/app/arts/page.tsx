@@ -1,8 +1,5 @@
 'use client';
 
-import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import { addToCart } from '../../store/features/cartSlice'; // Path to your cart slice
 import { useState, useEffect } from 'react';
 import AddToCartButton from '@/app/components/AddToCartButton';
 import OrderNowButton from '@/app/components/OrderNowButton';
@@ -16,21 +13,20 @@ interface GalleryItem {
   length: string;
   date: string | null;
   featured: boolean;
+  type: string;
 }
 
 export default function GalleryPage() {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const dispatch = useDispatch();
-  const router = useRouter();
 
   const fetchGalleryItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/gallery');
+      const response = await fetch('/api/items?type=gallery');
       const result = await response.json();
       if (response.ok) {
-        setGalleryItems(result.galleryItems);
+        setGalleryItems(result.items);
       } else {
         alert(`Error fetching gallery items: ${result.error}`);
       }

@@ -2,9 +2,7 @@
 
 import { useEffect, useState, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
-import { selectCart } from '../../store/features/cartSlice';
-import Link from 'next/link';
-import { deleteArts } from '@/app/lib/data'; 
+import { clearCart, selectCart } from '../../store/features/cartSlice';
 
 function formDataToObject(formData: FormData) {
   const obj: Record<string, any> = {};
@@ -53,54 +51,80 @@ export default function CheckoutForm() {
   
     const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {
       console.log('handlePAYMENTs')
-      e.preventDefault(); // Prevents the form from refreshing the page
+      // e.preventDefault(); // Prevents the form from refreshing the page
 
-      if (!card) {
-        alert("Card element not initialized.");
-        return;
-      }
+      // if (!card) {
+      //   alert("Card element not initialized.");
+      //   return;
+      // }
            
-      const formData = new FormData(e.currentTarget);
-      const formObject = formDataToObject(formData);
+      // const formData = new FormData(e.currentTarget);
+      // const formObject = formDataToObject(formData);
 
-      const payload = {
-        form: formObject,
-        cart: cart
-      }
+      // const payload = {
+      //   form: formObject,
+      //   cart: cart
+      // }
   
       try {
 
-        //Handle payment
-        const result = await card.tokenize();
-        console.log(result.status)
-        if (result.status === "OK") {
-          const responsePayment = await fetch("/api/square", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: result.token, cart }),
-          });
+      //   //Handle payment
+      //   const result = await card.tokenize();
+      //   console.log(result.status)
+      //   if (result.status === "OK") {
+      //     const responsePayment = await fetch("/api/square", {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json" },
+      //       body: JSON.stringify({ token: result.token, cart }),
+      //     });
   
-          const dataPayment = await responsePayment.json();
+      //     const dataPayment = await responsePayment.json();
           
-        //Handle receipt
-        if (dataPayment.message === "OK") {
-          setPaymentStatus("SUCCESS Charge");
-          const responseReceipt = await fetch("/api/receipt", {
-            method: "POST",
-            headers: { "Content-Type": "application/json"},
-            body: JSON.stringify(payload)
-          })
+      //   //Handle receipt
+      //   if (dataPayment.message === "OK") {
+      //     setPaymentStatus("SUCCESS Charge");
+      //     const responseReceipt = await fetch("/api/receipt", {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json"},
+      //       body: JSON.stringify(payload)
+      //     })
 
-          const responseDeleteArts = await deleteArts(cart); 
-        }
-        else {
-          alert("Payment failed: " + result.errors[0].detail);
-          setPaymentStatus("FAILED Charge");
-        }
-      }
+          await clearCart(); 
+
+          await handleDeleteFromFirebase(cart.items);
+        // }
+      //   else {
+      //     alert("Payment failed: " + result.errors[0].detail);
+      //     setPaymentStatus("FAILED Charge");
+      //   }
+      // }
       } catch (error) {
         console.error("Payment error: ", error);
         alert("An error occurred during payment.");
+      }
+    };
+
+    const handleDeleteFromFirebase = async (items: any[]) => {
+      const confirmed = window.confirm("Are you sure you want to delete this item?");
+      if (!confirmed) return;
+    
+      try {
+        const response = await fetch("/api/items", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items }),
+        });
+    
+        const result = await response.json();
+        console.log("Delete result:", result);
+    
+        if (!response.ok) {
+          alert(`Error deleting items: ${result.error}`);
+        } else {
+          console.log("Items deleted successfully!");
+        }
+      } catch (error) {
+        console.error("Error deleting items:", error);
       }
     };
 
@@ -172,7 +196,7 @@ export default function CheckoutForm() {
       <h1 className="text-2xl font-semibold text-teal-700 text-center mb-3">Checkout</h1>
       <form onSubmit={handleCheckout}>
         {/* Billing Information */}
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <h3 className="text-lg font-semibold mb-3 text-teal-600">Email Address</h3>
           <input
             type="email"
@@ -260,7 +284,7 @@ export default function CheckoutForm() {
         <div className="mb-8">
           <h3 className="text-lg font-semibold mb-3 text-teal-600">Shipping Address</h3>
             {/* Reuse input fields for Shipping Address */}
-            <input
+            {/* <input
             type="text"
             name="firstName"
             value={billingAddress.firstName}
@@ -315,9 +339,9 @@ export default function CheckoutForm() {
                 required
                 className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
-            </div>
+            </div> */}
           </div>
-        )}
+        )} 
   
         {/* Order Summary */}
       <div className="mb-8">
@@ -352,7 +376,7 @@ export default function CheckoutForm() {
         </p>
         <div id="card-container" className="mb-6"></div>
         <button
-          disabled={true}
+          // disabled={true}
           type="submit"
           className="bg-teal-500 text-white py-3 px-6 rounded-lg w-full hover:bg-teal-600 transition-all">
           Place Order

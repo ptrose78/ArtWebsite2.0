@@ -178,35 +178,50 @@ export async function PUT(req: Request) {
   }
 }
 
-
-
 export async function DELETE(req: Request) {
   try {
-    const { id, image_url } = await req.json();
-    console.log("id", id)
-    console.log(image_url)
-    // Validate required fields
-    if (!id || !image_url) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    const body = await req.json();
+    console.log("Request body:", body); // Check what is actually being received
+
+    const { items } = body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ message: 'No valid card items to delete' });
     }
 
-    // Delete file from Firebase Storage
-    const fileRef = ref(storage, image_url);
-    await deleteObject(fileRef);
-
-    // Delete document from Firestore
-    const docRef = doc(firestore, 'cards', id);
-    await deleteDoc(docRef);
-
+    // Delete files from Firebase Storage
+    for (const item of items) {
+      try {
+        console.log("Deleting file:", item.image_url);
+        const fileRef = ref(storage, item.image_url);
+        console.log("hi delete file cards")
+        await deleteObject(fileRef);
+      } catch (error) {
+        console.error(`Failed to delete file: ${item.image_url}`, error);
+      }
+    }
+    
+    // Delete documents from Firestore
+    for (const item of items) {
+      try {
+        console.log("Deleting document:", item.id);
+        const docRef = doc(firestore, "cards", item.id);
+        console.log("hi delete doc cards")
+        await deleteDoc(docRef);
+      } catch (error) {
+        console.error(`Failed to delete document: ${item.id}`, error);
+      }
+    }
+    
     return NextResponse.json(
-      { message: 'Card item deleted successfully' },
+      { message: 'Card item(s) deleted successfully' },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(
-      { error: 'Failed to delete card item' },
+      { error: 'Failed to delete card item(s)' },
       { status: 500 }
     );
   }
 }
+

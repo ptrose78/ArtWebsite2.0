@@ -9,6 +9,7 @@ interface GalleryItem {
   length: string;
   featured: boolean;
   file: File | null;
+  type: string;
 }
 
 export default function GalleryForm({ existingItem }: { existingItem?: GalleryItem }) {
@@ -19,6 +20,7 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
     width: existingItem?.width || "",
     length: existingItem?.length || "",
     file: null,
+    type: "gallery",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,19 +41,20 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
 
     try {
       const formDataToSubmit = new FormData();
-      formDataToSubmit.append("file", formData.file as Blob);
       formDataToSubmit.append("title", formData.title);
       formDataToSubmit.append("price", formData.price);
       formDataToSubmit.append("width", formData.width);
       formDataToSubmit.append("length", formData.length);
       formDataToSubmit.append("featured", String(formData.featured));
+      formDataToSubmit.append("file", formData.file as Blob);
+      formDataToSubmit.append("type", "gallery");
 
       const response = existingItem
-        ? await fetch(`/api/gallery/${existingItem.id}`, {
+        ? await fetch(`/api/items/${existingItem.id}`, {
             method: "PUT",
             body: formDataToSubmit,
           })
-        : await fetch(`/api/gallery`, {
+        : await fetch(`/api/items`, {
             method: "POST",
             body: formDataToSubmit,
           });

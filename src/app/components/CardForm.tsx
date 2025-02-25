@@ -9,7 +9,7 @@ interface CardItem {
   length: string;
   featured: boolean;
   file: File | null;
-
+  type: string;
 }
 
 export default function CardForm({ existingItem }: { existingItem?: CardItem }) {
@@ -20,6 +20,7 @@ export default function CardForm({ existingItem }: { existingItem?: CardItem }) 
     length: existingItem?.length || "",
     featured: existingItem?.featured || false,
     file: null,
+    type: "cards",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,13 +47,14 @@ export default function CardForm({ existingItem }: { existingItem?: CardItem }) 
       formDataToSubmit.append("width", formData.width);
       formDataToSubmit.append("length", formData.length);
       formDataToSubmit.append("featured", String(formData.featured));
+      formDataToSubmit.append("type", "cards");
 
       const response = existingItem
-        ? await fetch(`/api/cards/${existingItem.id}`, {
+        ? await fetch(`/api/items/${existingItem.id}`, {
             method: "PUT",
             body: formDataToSubmit,
           })
-        : await fetch(`/api/cards`, {
+        : await fetch(`/api/items`, {
             method: "POST",
             body: formDataToSubmit,
           });

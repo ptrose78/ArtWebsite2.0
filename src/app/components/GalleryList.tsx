@@ -9,6 +9,7 @@ interface GalleryItem {
   length: string;
   featured: boolean;
   image_url: string;
+  type: string;
 }
 
 export default function GalleryList() {
@@ -20,10 +21,11 @@ export default function GalleryList() {
   const fetchGalleryItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/gallery");
+      const response = await fetch("/api/items?type=gallery");
       const result = await response.json();
+      console.log("result", result) 
       if (response.ok) {
-        setGalleryItems(result.galleryItems);
+        setGalleryItems(result.items);
       } else {
         alert(`Error fetching gallery items: ${result.error}`);
       }
@@ -35,18 +37,22 @@ export default function GalleryList() {
     }
   };
 
-  const handleDelete = async (id: string, image_url: string) => {
+  const handleDelete = async (item: GalleryItem) => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");
     if (confirmed) {
       try {
-        const response = await fetch("/api/gallery", {
+        const response = await fetch("/api/items", {
           method: "DELETE",
-          body: JSON.stringify({ id, image_url }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ items: [item] }), 
         });
+        console.log("response", response)
         const result = await response.json();
         if (response.ok) {
           alert("Gallery item deleted successfully!");
-          setGalleryItems(galleryItems.filter(item => item.id !== id));
+          setGalleryItems(galleryItems.filter(galleryItem => galleryItem.id !== item.id)); 
         } else {
           alert(`Error deleting gallery item: ${result.error}`);
         }
@@ -55,7 +61,7 @@ export default function GalleryList() {
         alert("An error occurred while deleting the gallery item.");
       }
     }
-  };
+};
 
   const handleEdit = (item: GalleryItem) => {
     setEditingItem({ ...item });
@@ -83,15 +89,17 @@ export default function GalleryList() {
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("id", editingItem.id);
+      formData.append("type", "gallery");
 
       try {
-        const uploadResponse = await fetch("/api/upload", {
+        const uploadResponse = await fetch("/api/items/upload", {
           method: "POST",
           body: formData,
         });
         const uploadResult = await uploadResponse.json();
         if (uploadResponse.ok) {
           updatedImageUrl = uploadResult.image_url;
+          console.log("updatedImageUrl", updatedImageUrl)
         } else {
           alert(`Error uploading new image: ${uploadResult.error}`);
           return;
@@ -103,10 +111,11 @@ export default function GalleryList() {
       }
     }
 
+    //update item
     try {
       const updatedItem = { ...editingItem, image_url: updatedImageUrl };
       console.log(updatedItem)
-      const response = await fetch("/api/gallery", {
+      const response = await fetch("/api/items", {
         method: "PUT",
         body: JSON.stringify(updatedItem),
         headers: { "Content-Type": "application/json" },
@@ -250,7 +259,7 @@ export default function GalleryList() {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(item.id, item.image_url)}
+                      onClick={() => handleDelete(item)}
                       className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
                     >
                       Delete

@@ -9,6 +9,7 @@ interface CardItem {
   length: string;
   featured: boolean;
   image_url: string;
+  type: string;
 }
 
 export default function CardList() {
@@ -21,13 +22,13 @@ export default function CardList() {
     setIsLoading(true);
     console.log("fetchCardItems")
     try {
-      const response = await fetch("/api/cards");
+      const response = await fetch("/api/items?type=cards");
       const result = await response.json();
       console.log("result", result)
       if (response.ok) {
         console.log("response.ok", response.ok)
-        console.log("result.cardItems", result.cardItems)
-        setCardItems(result.cardItems ?? []);
+        console.log("result.cardItems", result.items)
+        setCardItems(result.items ?? []);
       } else {
         alert(`Error fetching card items: ${result.error}`);
       }
@@ -39,18 +40,22 @@ export default function CardList() {
     }
   };
 
-  const handleDelete = async (id: string, image_url: string) => {
+  const handleDelete = async (item: CardItem) => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");
     if (confirmed) {
       try {
-        const response = await fetch("/api/cards", {
+        const response = await fetch("/api/items", {
           method: "DELETE",
-          body: JSON.stringify({ id, image_url }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ items: [item] }), 
         });
+
         const result = await response.json();
         if (response.ok) {
           alert("Card item deleted successfully!");
-          setCardItems(cardItems.filter(item => item.id !== id));
+          setCardItems(cardItems.filter(cardItem => cardItem.id !== item.id)); 
         } else {
           alert(`Error deleting card item: ${result.error}`);
         }
@@ -87,9 +92,10 @@ export default function CardList() {
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("id", editingItem.id);
+      formData.append("type", "cards");
 
       try {
-        const uploadResponse = await fetch("/api/upload", {
+        const uploadResponse = await fetch("/api/items/upload", {
           method: "POST",
           body: formData,
         });
@@ -110,7 +116,7 @@ export default function CardList() {
     try {
       const updatedItem = { ...editingItem, image_url: updatedImageUrl };
       console.log(updatedItem)
-      const response = await fetch("/api/cards", {
+      const response = await fetch("/api/items", {
         method: "PUT",
         body: JSON.stringify(updatedItem),
         headers: { "Content-Type": "application/json" },
@@ -254,7 +260,7 @@ export default function CardList() {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(item.id, item.image_url)}
+                      onClick={() => handleDelete(item)}
                       className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
                     >
                       Delete

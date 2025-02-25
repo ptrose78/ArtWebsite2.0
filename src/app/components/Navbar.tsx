@@ -117,9 +117,11 @@ export default function Navbar() {
               Gallery
             </Link>
           </li>
-          <Link href="/cards" className="md:text-xl text-gray-300 hover:text-gray-100">
+          <li>
+            <Link href="/cards" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
                 Cards
-          </Link>
+            </Link>
+          </li>
           <li>
             <Link href="/blog" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Blogs

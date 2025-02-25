@@ -15,6 +15,7 @@ interface CardItem {
   size: string;
   description: string;
   featured: boolean;
+  type: string;
 }
 
 export default function CardGalleryPage() {
@@ -26,10 +27,10 @@ export default function CardGalleryPage() {
   const fetchCardItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/cards');
+      const response = await fetch('/api/items?type=cards');
       const result = await response.json();
       if (response.ok) {
-        setCardItems(result.cardItems);
+        setCardItems(result.items);
       } else {
         alert(`Error fetching card items: ${result.error}`);
       }

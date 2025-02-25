@@ -12,7 +12,7 @@ export async function GET(req) {
         const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
         // Generate a new access token
-        const newAccessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
+        const newAccessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: '30m' });
 
         // Return the new access token in the response
         return new Response(JSON.stringify({ accessToken: newAccessToken }), {
