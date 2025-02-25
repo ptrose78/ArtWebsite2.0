@@ -74,7 +74,7 @@ export default function Navbar() {
               <Link href="/about" className="md:text-xl text-gray-700 hover:text-gray-900">
                 About
               </Link>
-              <Link href="/arts" className="md:text-xl text-gray-700 hover:text-gray-900">
+              <Link href="/gallery" className="md:text-xl text-gray-700 hover:text-gray-900">
                 Gallery
               </Link>
               <Link href="/cards" className="md:text-xl text-gray-700 hover:text-gray-900">
@@ -113,7 +113,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="/arts" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
+            <Link href="/gallery" className="md:text-xl text-gray-300 hover:text-gray-100 mb-4" onClick={toggleMenu}>
               Gallery
             </Link>
           </li>
