@@ -1,14 +1,9 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  reactStrictMode: false,
-};
-
-export default nextConfig;
-
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+  reactStrictMode: false,
   eslint: {
-    ignoreDuringBuilds: true, // Disables linting during the build process
+    ignoreDuringBuilds: true,
   },
 };

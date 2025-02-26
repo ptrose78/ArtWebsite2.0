@@ -9,10 +9,10 @@ export async function GET(req) {
 
     try {
         // Verify the refresh token
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as { userId: string };
 
         // Generate a new access token
-        const newAccessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: '30m' });
+        const newAccessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET as string, { expiresIn: '30m' });
 
         // Return the new access token in the response
         return new Response(JSON.stringify({ accessToken: newAccessToken }), {
