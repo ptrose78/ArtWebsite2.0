@@ -70,9 +70,14 @@ export default function CardGalleryPage() {
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <h1 className="text-3xl text-center font-semibold text-gray-700 mb-8">Cards Collection</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {cardItems.length > 0 ? (
-          cardItems.map((card) => (
+      
+        {isLoading ? (
+          <p className="text-center text-gray-600 text-lg">Loading...</p>
+        ) : cardItems.length === 0 ? (
+          <p className="text-center text-gray-500 text-lg">No card items available at the moment.</p> 
+        ) :  (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {cardItems.map((card) => (
             <div key={card.id} className="bg-white border border-gray-200 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all">
               <img
                 src={card.image_url ?? 'https://placehold.co/200x200'}
@@ -81,18 +86,17 @@ export default function CardGalleryPage() {
               />
               <h2 className="text-center text-xl font-medium text-gray-800 mt-4">{card.title}</h2>
               <p className="text-center text-gray-600 font-semibold text-lg mt-2">${parseFloat(card.price).toFixed(2)}</p>
-              <p className="text-center text-gray-600 font-semibold text-lg mt-2">Size: {card.size}</p>
+              <p className="text-center text-gray-600 font-semibold text-lg mt-2">{`${card.width} x ${card.length}`}</p>
               <p className="text-center text-gray-500 text-sm mt-2">{card.description}</p>
               <div className="flex justify-center space-x-4 items-center mt-2">
                 <AddToCartButton item={card} />
                 <OrderNowButton item={card} />
               </div>
             </div>
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
+            ))
+          }
+        </div>
+      )}
     </div>
   );
 }

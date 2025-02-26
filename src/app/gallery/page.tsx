@@ -68,28 +68,37 @@ export default function GalleryPage() {
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <h1 className="text-3xl text-center font-semibold text-gray-700 mb-8">Art Gallery</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {galleryItems.length > 0 ? (
-          galleryItems.map((art) => (
-            <div key={art.id} className="bg-white border border-gray-200 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all">
+  
+      {isLoading ? (
+        <p className="text-center text-gray-600 text-lg">Loading...</p> // Show loading state
+      ) : galleryItems.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg">No gallery items available at the moment.</p> // Handle empty state
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {galleryItems.map((art) => (
+            <div
+              key={art.id}
+              className="bg-white border border-gray-200 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all"
+            >
               <img
                 src={art.image_url ?? 'https://placehold.co/200x200'}
                 alt={art.title}
                 className="w-full h-56 object-cover rounded-lg image-slide"
               />
               <h2 className="text-center text-xl font-medium text-gray-800 mt-4">{art.title}</h2>
-              <p className="text-center text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
+              <p className="text-center text-gray-600 font-semibold text-lg mt-2">
+                ${parseFloat(art.price).toFixed(2)}
+              </p>
               <p className="text-center text-gray-600 font-semibold text-lg mt-2">{`${art.width} x ${art.length}`}</p>
               <div className="flex justify-center space-x-4 items-center mt-2">
                 <AddToCartButton item={art} />
                 <OrderNowButton item={art} />
               </div>
             </div>
-          ))
-        ) : (
-          <p>Loading...</p> // Handle loading state
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
+  

@@ -61,10 +61,10 @@ export default function Home() {
   const fetchGalleryItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/gallery");
+      const response = await fetch("/api/items?type=gallery");
       const result = await response.json();
       if (response.ok) {
-        setGalleryItems(result.galleryItems);
+        setGalleryItems(result.items);
       } else {
         alert(`Error fetching gallery items: ${result.error}`);
       }
@@ -247,7 +247,7 @@ export default function Home() {
         </h1>
         <p className="sm:text-xl md:text-xl lg:text-3xl mb-8">Discover Unique Art for Your Space</p>
         <a
-          href="/arts"
+          href="/gallery"
           className="bg-teal-500 text-white py-2 px-6 rounded-full hover:bg-teal-600 sm:text-xl md:text-2xl lg:text-2xl"
         >
           Explore Our Collection

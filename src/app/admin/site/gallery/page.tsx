@@ -5,7 +5,7 @@ import GalleryList from "@/app/components/GalleryList";
 
 export default function GalleryPage() {
   return (
-    <div className="">
+    <div>
       <GalleryForm />
       <GalleryList />
     </div>

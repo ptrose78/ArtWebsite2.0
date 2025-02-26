@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       const id = formData.get("id")?.toString();
       const file = formData.get("file") as File;
       const type = formData.get("type")?.toString();
-  
+      console.log("id:", id, "file:", file, "type:", type);
       if (!id || !file) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
       }

@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useGetGalleryItemsQuery, useDeleteGalleryItemMutation, useUpdateGalleryItemMutation, useAddGalleryItemMutation } from '../../store/features/apiSlice';
 
 interface GalleryItem {
   id: string;
@@ -13,59 +14,37 @@ interface GalleryItem {
 }
 
 export default function GalleryList() {
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const fetchGalleryItems = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/items?type=gallery");
-      const result = await response.json();
-      console.log("result", result) 
-      if (response.ok) {
-        setGalleryItems(result.items);
-      } else {
-        alert(`Error fetching gallery items: ${result.error}`);
-      }
-    } catch (error) {
-      console.error("Error fetching gallery items:", error);
-      alert("An error occurred while fetching gallery items.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  
+  const { data = [], isLoading } = useGetGalleryItemsQuery({});
+  const galleryItems = data.items || [];
+  const [deleteGalleryItem] = useDeleteGalleryItemMutation();
+  const [updateGalleryItem] = useUpdateGalleryItemMutation();
+  const [addGalleryItem] = useAddGalleryItemMutation();
 
   const handleDelete = async (item: GalleryItem) => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");
     if (confirmed) {
       try {
-        const response = await fetch("/api/items", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ items: [item] }), 
-        });
-        console.log("response", response)
-        const result = await response.json();
-        if (response.ok) {
-          alert("Gallery item deleted successfully!");
-          setGalleryItems(galleryItems.filter(galleryItem => galleryItem.id !== item.id)); 
+        const response = await deleteGalleryItem([item]);  
+
+        if (response.error) {
+          alert(`Error deleting gallery item: ${response.error}`);
         } else {
-          alert(`Error deleting gallery item: ${result.error}`);
+          alert("Gallery item deleted successfully!");
         }
       } catch (error) {
         console.error("Error deleting gallery item:", error);
         alert("An error occurred while deleting the gallery item.");
       }
     }
-};
+  };
 
   const handleEdit = (item: GalleryItem) => {
     setEditingItem({ ...item });
-    setSelectedFile(null); // Reset the file input
+    setSelectedFile(null);
   };
 
   const handleCancelEdit = () => {
@@ -80,69 +59,67 @@ export default function GalleryList() {
   };
 
   const handleSaveEdit = async () => {
-    if (!editingItem) return;
-
-    let updatedImageUrl = editingItem.image_url;
-
-    // If a new file is selected, upload it to Firebase Storage
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("id", editingItem.id);
-      formData.append("type", "gallery");
-
-      try {
-        const uploadResponse = await fetch("/api/items/upload", {
-          method: "POST",
-          body: formData,
-        });
-        const uploadResult = await uploadResponse.json();
-        if (uploadResponse.ok) {
-          updatedImageUrl = uploadResult.image_url;
-          console.log("updatedImageUrl", updatedImageUrl)
-        } else {
-          alert(`Error uploading new image: ${uploadResult.error}`);
+    if (!editingItem) return; // Exit if no item is being edited
+    
+    try {
+      let updatedImageUrl = editingItem.image_url; // Default to existing image URL
+  
+      // If a new file is selected, upload it first
+      if (selectedFile) {
+        const fileData = new FormData();
+        fileData.append("id", editingItem.id);
+        fileData.append("file", selectedFile);
+        fileData.append("type", "gallery");
+  
+        try {
+          const uploadResponse = await fetch("/api/items/upload", {
+            method: "POST",
+            body: fileData,
+          });
+          const uploadResult = await uploadResponse.json();
+  
+          if (uploadResponse.ok) {
+            updatedImageUrl = uploadResult.image_url; // Get new image URL from server
+          } else {
+            alert(`Error uploading new image: ${uploadResult.error}`);
+            return;
+          }
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          alert("An error occurred while uploading the image.");
           return;
         }
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        alert("An error occurred while uploading the image.");
-        return;
       }
-    }
-
-    //update item
-    try {
-      const updatedItem = { ...editingItem, image_url: updatedImageUrl };
-      console.log(updatedItem)
-      const response = await fetch("/api/items", {
-        method: "PUT",
-        body: JSON.stringify(updatedItem),
-        headers: { "Content-Type": "application/json" },
-      });
-      const result = await response.json();
-      if (response.ok) {
-        alert("Gallery item updated successfully!");
-        setGalleryItems((prevItems) =>
-          prevItems.map((item) => (item.id === editingItem.id ? updatedItem : item))
-        );
-        setEditingItem(null);
-        setSelectedFile(null);
-      } else {
-        alert(`Error updating gallery item: ${result.error}`);
-      }
+  
+      // Now create formDataToSubmit with the new image URL
+      const formDataToSubmit = new FormData();
+      formDataToSubmit.append("id", editingItem.id);
+      formDataToSubmit.append("title", editingItem.title);
+      formDataToSubmit.append("price", editingItem.price);
+      formDataToSubmit.append("width", editingItem.width);
+      formDataToSubmit.append("length", editingItem.length);
+      formDataToSubmit.append("featured", String(editingItem.featured));
+      formDataToSubmit.append("image_url", updatedImageUrl); // Include new image URL
+      formDataToSubmit.append("file", selectedFile as Blob);
+      formDataToSubmit.append("type", "gallery");
+      formDataToSubmit.append("updatedAt", new Date().toISOString());
+      
+      // Use `updateGalleryItem` mutation
+      const response = await updateGalleryItem(formDataToSubmit).unwrap();
+      alert("Gallery item updated successfully!");
+  
+      // Reset form
+      setEditingItem(null);
+      setSelectedFile(null);
     } catch (error) {
       console.error("Error updating gallery item:", error);
       alert("An error occurred while updating the gallery item.");
     }
   };
-
-  useEffect(() => {
-    fetchGalleryItems();
-  }, []);
+  
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-50">
+    <div className="max-w-4xl mx-auto p-6 bg-gray-50 mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Gallery Items</h2>
       {isLoading ? (
         <p className="text-gray-600">Loading...</p>
@@ -156,9 +133,12 @@ export default function GalleryList() {
                     <label className="block text-sm font-medium text-gray-600">Title:</label>
                     <input
                       type="text"
-                      value={editingItem.title}
+                      value={editingItem?.title}
                       onChange={(e) =>
-                        setEditingItem({ ...editingItem, title: e.target.value })
+                        setEditingItem(editingItem ? {
+                          ...editingItem,
+                          title: e.target.value
+                        } : null)
                       }
                       className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                     />
@@ -167,9 +147,12 @@ export default function GalleryList() {
                     <label className="block text-sm font-medium text-gray-600">Price:</label>
                     <input
                       type="text"
-                      value={editingItem.price}
+                      value={editingItem?.price}
                       onChange={(e) =>
-                        setEditingItem({ ...editingItem, price: e.target.value })
+                        setEditingItem(editingItem ? {
+                          ...editingItem,
+                          price: e.target.value
+                        } : null)
                       }
                       className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                     />
@@ -178,9 +161,12 @@ export default function GalleryList() {
                     <label className="block text-sm font-medium text-gray-600">Width:</label>
                     <input
                       type="text"
-                      value={editingItem.width}
+                      value={editingItem?.width}
                       onChange={(e) =>
-                        setEditingItem({ ...editingItem, width: e.target.value })
+                        setEditingItem(editingItem ? {
+                          ...editingItem,
+                          width: e.target.value
+                        } : null)
                       }
                       className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                     />
@@ -190,9 +176,12 @@ export default function GalleryList() {
                     <label className="block text-sm font-medium text-gray-600">Length:</label>
                     <input
                       type="text"
-                      value={editingItem.length}
+                      value={editingItem?.length}
                       onChange={(e) =>
-                        setEditingItem({ ...editingItem, length: e.target.value })
+                        setEditingItem(editingItem ? {
+                          ...editingItem,
+                          length: e.target.value
+                        } : null)
                       }
                       className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                     />
@@ -201,22 +190,31 @@ export default function GalleryList() {
                   <div className="flex items-center space-x-2">
                     <input
                       type="checkbox"
-                      checked={editingItem.featured}
+                      checked={editingItem?.featured}
                       onChange={(e) =>
-                        setEditingItem({ ...editingItem, featured: e.target.checked })
+                        setEditingItem(editingItem ? {
+                          ...editingItem,
+                          featured: e.target.checked
+                        } : null)
                       }
                       className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                     />
                     <label className="text-sm font-medium text-gray-600">Featured</label>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-600">Upload New Image:</label>
-                    <input
-                      type="file"
-                      onChange={handleFileChange}
-                      className="mt-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border file:border-gray-300 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
-                  </div>
+                  <label className="block text-sm font-medium text-gray-600">Upload New Image:</label>
+                  <input
+                    type="file"
+                    onChange={handleFileChange} 
+                    className="mt-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border file:border-gray-300 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {editingItem?.image_url && !selectedFile && (
+                    <img src={editingItem.image_url} alt="Current" className="mt-2 w-32 h-32 object-cover rounded" />
+                  )}
+                  {selectedFile && (
+                    <p className="mt-2 text-sm text-gray-700">Selected File: {selectedFile.name}</p>
+                  )}
+                </div>
                   <div className="flex space-x-2">
                     <button
                       onClick={handleSaveEdit}
@@ -251,7 +249,7 @@ export default function GalleryList() {
                       {item.featured ? "Featured" : "Not Featured"}
                     </p>
                   </div>
-                  <div className="flex items-center space-x-2"> {/* Buttons container - always horizontal */}
+                  <div className="flex items-center space-x-2"> 
                     <button
                       onClick={() => handleEdit(item)}
                       className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"

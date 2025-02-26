@@ -1,5 +1,6 @@
 'use client';
 import { useState } from "react";
+import { useAddCardItemMutation, useUpdateCardItemMutation } from "../../store/features/apiSlice";
 
 interface CardItem {
   id?: string;
@@ -23,6 +24,8 @@ export default function CardForm({ existingItem }: { existingItem?: CardItem }) 
     type: "cards",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [addCardItem] = useAddCardItemMutation();
+  const [updateCardItem] = useUpdateCardItemMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,8 +40,9 @@ export default function CardForm({ existingItem }: { existingItem?: CardItem }) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form data:", formData);
     setIsLoading(true);
-
+  
     try {
       const formDataToSubmit = new FormData();
       formDataToSubmit.append("file", formData.file as Blob);
@@ -48,23 +52,16 @@ export default function CardForm({ existingItem }: { existingItem?: CardItem }) 
       formDataToSubmit.append("length", formData.length);
       formDataToSubmit.append("featured", String(formData.featured));
       formDataToSubmit.append("type", "cards");
-
-      const response = existingItem
-        ? await fetch(`/api/items/${existingItem.id}`, {
-            method: "PUT",
-            body: formDataToSubmit,
-          })
-        : await fetch(`/api/items`, {
-            method: "POST",
-            body: formDataToSubmit,
-          });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Card item saved successfully!");
-      } else {
+  
+      const result = existingItem
+        ? await updateCardItem({ id: existingItem.id, ...formDataToSubmit })
+        : await addCardItem(formDataToSubmit);
+  
+        console.log("result",result)
+      if ("error" in result) {
         alert(`Error: ${result.error}`);
+      } else {
+        alert("Card item saved successfully!");
       }
     } catch (error) {
       console.error("Error saving card item:", error);
@@ -136,22 +133,6 @@ export default function CardForm({ existingItem }: { existingItem?: CardItem }) 
           onChange={handleChange}
           className="mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
         />
-      </div>
-
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="featured"
-          name="featured"
-          checked={formData.featured}
-          onChange={(e) =>
-            setFormData({ ...formData, featured: e.target.checked })
-          }
-          className="h-4 w-4 text-blue-600 focus:ring focus:ring-blue-200 border-gray-300 rounded"
-        />
-        <label htmlFor="featured" className="text-sm font-medium text-gray-600">
-          Featured
-        </label>
       </div>
 
       <div className="flex flex-col">

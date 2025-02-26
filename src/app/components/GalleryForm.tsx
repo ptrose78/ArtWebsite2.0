@@ -1,5 +1,6 @@
 'use client';
 import { useState } from "react";
+import { useAddGalleryItemMutation, useUpdateGalleryItemMutation } from "../../store/features/apiSlice";
 
 interface GalleryItem {
   id?: string;
@@ -16,13 +17,15 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
   const [formData, setFormData] = useState<GalleryItem>({
     title: existingItem?.title || "",
     price: existingItem?.price || "",
-    featured: existingItem?.featured || false,
     width: existingItem?.width || "",
     length: existingItem?.length || "",
+    featured: existingItem?.featured || false,
     file: null,
     type: "gallery",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [addGalleryItem] = useAddGalleryItemMutation();
+  const [updateGalleryItem] = useUpdateGalleryItemMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,34 +40,27 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form data:", formData);
     setIsLoading(true);
-
+  
     try {
       const formDataToSubmit = new FormData();
+      formDataToSubmit.append("file", formData.file as Blob);
       formDataToSubmit.append("title", formData.title);
       formDataToSubmit.append("price", formData.price);
       formDataToSubmit.append("width", formData.width);
       formDataToSubmit.append("length", formData.length);
-      formDataToSubmit.append("featured", String(formData.featured));
-      formDataToSubmit.append("file", formData.file as Blob);
+      formDataToSubmit.append("featured", formData.featured.toString());
       formDataToSubmit.append("type", "gallery");
-
-      const response = existingItem
-        ? await fetch(`/api/items/${existingItem.id}`, {
-            method: "PUT",
-            body: formDataToSubmit,
-          })
-        : await fetch(`/api/items`, {
-            method: "POST",
-            body: formDataToSubmit,
-          });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Gallery item saved successfully!");
-      } else {
+  
+      
+      const result = await addGalleryItem(formDataToSubmit);
+  
+        console.log("result",result)
+      if ("error" in result) {
         alert(`Error: ${result.error}`);
+      } else {
+        alert("Gallery item saved successfully!");
       }
     } catch (error) {
       console.error("Error saving gallery item:", error);
@@ -91,7 +87,6 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
           name="title"
           value={formData.title}
           onChange={handleChange}
-          required
           className="mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
         />
       </div>
@@ -121,7 +116,6 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
           name="width"
           value={formData.width}
           onChange={handleChange}
-          required
           className="mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
         />
       </div>
@@ -136,7 +130,6 @@ export default function GalleryForm({ existingItem }: { existingItem?: GalleryIt
           name="length"
           value={formData.length}
           onChange={handleChange}
-          required
           className="mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:outline-none"
         />
       </div>

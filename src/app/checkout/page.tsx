@@ -3,6 +3,7 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { clearCart, selectCart } from '../../store/features/cartSlice';
+import { useDeleteCardItemMutation } from "../../store/features/apiSlice"; 
 
 function formDataToObject(formData: FormData) {
   const obj: Record<string, any> = {};
@@ -16,6 +17,7 @@ export default function CheckoutForm() {
     const [card, setCard] = useState<any>(null);
     const [paymentStatus, setPaymentStatus] = useState('');
     const cart = useSelector(selectCart);
+    const [deleteCardItem] = useDeleteCardItemMutation();
   
     const appId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID!;
     const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!;
@@ -105,28 +107,19 @@ export default function CheckoutForm() {
     };
 
     const handleDeleteFromFirebase = async (items: any[]) => {
-      const confirmed = window.confirm("Are you sure you want to delete this item?");
-      if (!confirmed) return;
-    
       try {
-        const response = await fetch("/api/items", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ items }),
-        });
-    
-        const result = await response.json();
-        console.log("Delete result:", result);
-    
-        if (!response.ok) {
-          alert(`Error deleting items: ${result.error}`);
+        // Pass the items to the mutation (single or multiple)
+        const response = await deleteCardItem(items); 
+
+        if (response.error) {
+          alert(`Error deleting items: ${response.error}`);
         } else {
           console.log("Items deleted successfully!");
         }
       } catch (error) {
         console.error("Error deleting items:", error);
       }
-    };
+};
 
   const [emailAddress, setEmailAddress] = useState({
     email: ''

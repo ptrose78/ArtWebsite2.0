@@ -36,6 +36,9 @@ const getCollectionRef = (type: string) => {
 // **Handle Uploading Items (POST)**
 export async function POST(req: Request) {
   try {
+    const contentType = req.headers.get("content-type") || "";
+    console.log("Content type:", contentType);
+  
     const formData = await req.formData();
     const type = formData.get("type")?.toString();
     const title = formData.get("title")?.toString();
@@ -44,6 +47,8 @@ export async function POST(req: Request) {
     const length = formData.get("length")?.toString();
     const featured = formData.get("featured")?.toString();
     const file = formData.get("file") as File;
+
+    console.log("Received form data:", { type, title, price, featured, file, width, length });
 
     if (!type || !title || !price || !featured || !file || !width || !length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -83,10 +88,11 @@ export async function POST(req: Request) {
 export async function GET(req: NextRequest) {
   try {
     const type = req.nextUrl.searchParams.get("type");
+
     if (!type) return NextResponse.json({ error: "Missing type parameter" }, { status: 400 });
 
     const collectionRef = getCollectionRef(type);
-    const snapshot = await getDocs(collectionRef);
+    const snapshot = await getDocs(collectionRef);;
 
     const items = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
@@ -103,19 +109,40 @@ export async function GET(req: NextRequest) {
 // **Update Items (PUT)**
 export async function PUT(req: Request) {
   try {
-    
-    const { id, type, title, price, featured, width, length, image_url } = await req.json();
+    const contentType = req.headers.get("content-type") || "";
+    console.log("Content type:", contentType);
+  
+    const formData = await req.formData();
+    const id = formData.get("id")?.toString();
+    const type = formData.get("type")?.toString();
+    const title = formData.get("title")?.toString();
+    const price = formData.get("price")?.toString();
+    const width = formData.get("width")?.toString();
+    const length = formData.get("length")?.toString();
+    const featured = formData.get("featured")?.toString();
+    const image_url = formData.get("image_url")?.toString();
+    const file = formData.get("file") as File;
 
-    if (!id || !type || !title || !price || !width || !length || !image_url) {
+    console.log("Received form data:", { type, title, price, featured, file, width, length, image_url });
+
+    if (!id ||!type || !title || !price || !featured || !file || !width || !length || !image_url) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     const docRef = doc(firestore, type, id);
     const updatedFields: any = { title, price, width, length, featured, image_url, updatedAt: new Date().toISOString() };
 
-      const docSnapshot = await getDoc(docRef);
+    const blob = await streamToBlob(file.stream());
+    const storageRef = ref(storage, `${type}/${file.name}`);
+    await uploadBytesResumable(storageRef, blob);
+    const downloadURL = await getDownloadURL(storageRef);
+    updatedFields.image_url = downloadURL;
+
+    // Check if the document exists and if the image_url is present
+    const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
         const existingData = docSnapshot.data();
+        console.log("Existing data:", existingData);
         if (existingData.image_url) {
           await deleteObject(ref(storage, existingData.image_url)).catch((err) => console.error("Failed to delete old file:", err));
         }
