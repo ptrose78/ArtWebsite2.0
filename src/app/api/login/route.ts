@@ -25,8 +25,9 @@ export async function POST(req: Request) {
   try {
     if (username === process.env.OWNERS_EMAIL) {
     // Use Firebase sign-in
-    const userCredential = await signInWithEmailAndPassword(auth, username, password);
+    const userCredential = await signInWithEmailAndPassword(auth, "paultrose1@gmail.com", password);
     const user = userCredential.user;
+    console.log("user", user);
 
     // Get the Firebase JWT
     const token = await user.getIdToken();
@@ -37,12 +38,13 @@ export async function POST(req: Request) {
       token: token, // Send the Firebase JWT
     });
 
+    console.log("token", token);
     response.cookies.set("authToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: 'strict',
       path: "/",
-      maxAge: 30 * 60, // 15 minutes
+      maxAge: 30 * 60, // 30 minutes
     });
 
     return response;

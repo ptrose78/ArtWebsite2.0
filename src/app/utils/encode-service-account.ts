@@ -11,7 +11,7 @@ function encodeJsonToBase64(filePath) {
   }
 }
 
-const filePath = 'c:\\Users\\ptros\\Downloads\\artwebsite-eebdb-firebase-adminsdk-flxft-8c5bd87ed9.json';
+const filePath = 'c:\\Users\\ptros\\Downloads\\artwebsite-eebdb-firebase-adminsdk-flxft-17557960f3.json';
 
 const encodedJson = encodeJsonToBase64(filePath);
 
