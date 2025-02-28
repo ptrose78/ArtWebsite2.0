@@ -69,7 +69,7 @@ export default function CardList() {
         const fileData = new FormData();
         fileData.append("id", editingItem.id);
         fileData.append("file", selectedFile);
-        fileData.append("type", "card");
+        fileData.append("type", "cards");
   
         try {
           const uploadResponse = await fetch("/api/items/upload", {
@@ -101,7 +101,7 @@ export default function CardList() {
       formDataToSubmit.append("featured", String(editingItem.featured));
       formDataToSubmit.append("image_url", updatedImageUrl); // Include new image URL
       formDataToSubmit.append("file", selectedFile as Blob);
-      formDataToSubmit.append("type", "card");
+      formDataToSubmit.append("type", "cards");
       formDataToSubmit.append("updatedAt", new Date().toISOString());
       
       // Use `updateCardItem` mutation

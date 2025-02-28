@@ -4,6 +4,7 @@ import { useEffect, useState, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { clearCart, selectCart } from '../../store/features/cartSlice';
 import { useDeleteCardItemMutation } from "../../store/features/apiSlice"; 
+import Link from 'next/link';
 
 function formDataToObject(formData: FormData) {
   const obj: Record<string, any> = {};
@@ -53,53 +54,53 @@ export default function CheckoutForm() {
   
     const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {
       console.log('handlePAYMENTs')
-      // e.preventDefault(); // Prevents the form from refreshing the page
+      e.preventDefault(); // Prevents the form from refreshing the page
 
-      // if (!card) {
-      //   alert("Card element not initialized.");
-      //   return;
-      // }
+      if (!card) {
+        alert("Card element not initialized.");
+        return;
+      }
            
-      // const formData = new FormData(e.currentTarget);
-      // const formObject = formDataToObject(formData);
+      const formData = new FormData(e.currentTarget);
+      const formObject = formDataToObject(formData);
 
-      // const payload = {
-      //   form: formObject,
-      //   cart: cart
-      // }
+      const payload = {
+        form: formObject,
+        cart: cart
+      }
   
       try {
 
-      //   //Handle payment
-      //   const result = await card.tokenize();
-      //   console.log(result.status)
-      //   if (result.status === "OK") {
-      //     const responsePayment = await fetch("/api/square", {
-      //       method: "POST",
-      //       headers: { "Content-Type": "application/json" },
-      //       body: JSON.stringify({ token: result.token, cart }),
-      //     });
+        //Handle payment
+        const result = await card.tokenize();
+        console.log(result.status)
+        if (result.status === "OK") {
+          const responsePayment = await fetch("/api/square", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: result.token, cart }),
+          });
   
-      //     const dataPayment = await responsePayment.json();
+          const dataPayment = await responsePayment.json();
           
-      //   //Handle receipt
-      //   if (dataPayment.message === "OK") {
-      //     setPaymentStatus("SUCCESS Charge");
-      //     const responseReceipt = await fetch("/api/receipt", {
-      //       method: "POST",
-      //       headers: { "Content-Type": "application/json"},
-      //       body: JSON.stringify(payload)
-      //     })
+        //Handle receipt
+        if (dataPayment.message === "OK") {
+          setPaymentStatus("SUCCESS Charge");
+          const responseReceipt = await fetch("/api/receipt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+          })
 
           await clearCart(); 
 
           await handleDeleteFromFirebase(cart.items);
-        // }
-      //   else {
-      //     alert("Payment failed: " + result.errors[0].detail);
-      //     setPaymentStatus("FAILED Charge");
-      //   }
-      // }
+        }
+        else {
+          alert("Payment failed: " + result.errors[0].detail);
+          setPaymentStatus("FAILED Charge");
+        }
+      }
       } catch (error) {
         console.error("Payment error: ", error);
         alert("An error occurred during payment.");
@@ -112,7 +113,7 @@ export default function CheckoutForm() {
         const response = await deleteCardItem(items); 
 
         if (response.error) {
-          alert(`Error deleting items: ${response.error}`);
+          console.log("Error deleting items:", response.error);
         } else {
           console.log("Items deleted successfully!");
         }
@@ -183,13 +184,13 @@ export default function CheckoutForm() {
     }));
   };
 
-
   return (
     <div className="max-w-2xl mx-auto p-8 bg-gray-50 shadow-lg rounded-lg">
       <h1 className="text-2xl font-semibold text-teal-700 text-center mb-3">Checkout</h1>
       <form onSubmit={handleCheckout}>
+        
         {/* Billing Information */}
-        {/* <div className="mb-8">
+        <div className="mb-8">
           <h3 className="text-lg font-semibold mb-3 text-teal-600">Email Address</h3>
           <input
             type="email"
@@ -272,15 +273,15 @@ export default function CheckoutForm() {
           </label>
         </div>
 
-        {/* Shipping Information */}
+        Shipping Information
         {!sameAsBilling && (
         <div className="mb-8">
           <h3 className="text-lg font-semibold mb-3 text-teal-600">Shipping Address</h3>
             {/* Reuse input fields for Shipping Address */}
-            {/* <input
+            <input
             type="text"
             name="firstName"
-            value={billingAddress.firstName}
+            value={shippingAddress.firstName}
             onChange={handleBillingChange}
             placeholder="First Name"
             required
@@ -289,7 +290,7 @@ export default function CheckoutForm() {
           <input
             type="text"
             name="lastName"
-            value={billingAddress.lastName}
+            value={shippingAddress.lastName}
             onChange={handleBillingChange}
             placeholder="Last Name"
             required
@@ -298,7 +299,7 @@ export default function CheckoutForm() {
           <input
             type="text"
             name="address"
-            value={billingAddress.address}
+            value={shippingAddress.address}
             onChange={handleBillingChange}
             placeholder="Street Address"
             required
@@ -308,7 +309,7 @@ export default function CheckoutForm() {
               <input
                 type="text"
                 name="city"
-                value={billingAddress.city}
+                value={shippingAddress.city}
                 onChange={handleBillingChange}
                 placeholder="City"
                 required
@@ -317,7 +318,7 @@ export default function CheckoutForm() {
               <input
                 type="text"
                 name="state"
-                value={billingAddress.state}
+                value={shippingAddress.state}
                 onChange={handleBillingChange}
                 placeholder="State"
                 required
@@ -326,13 +327,13 @@ export default function CheckoutForm() {
               <input
                 type="text"
                 name="zip"
-                value={billingAddress.zip}
+                value={shippingAddress.zip}
                 onChange={handleBillingChange}
                 placeholder="ZIP Code"
                 required
                 className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
-            </div> */}
+            </div>
           </div>
         )} 
   
@@ -377,11 +378,16 @@ export default function CheckoutForm() {
         {paymentStatus && (
           <div className="mt-4 text-center">
             {paymentStatus === 'SUCCESS Charge' ? (
+              <>
               <div className="bg-green-100 p-4 rounded-lg">
                 <p className="text-green-800">
                   Payment successful! Your receipt has been emailed to you.
                 </p>
               </div>
+              <div className="mt-4 text-center">
+              <Link href="/gallery" className="text-teal-500 hover:text-teal-600">Continue Shopping</Link>
+              </div>
+              </>
             ) : (
               <div className="bg-red-100 p-4 rounded-lg">
                 <p className="text-red-800">Payment failed. Please try again.</p>
