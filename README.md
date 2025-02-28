@@ -20,6 +20,7 @@ A custom e-commerce platform for artists to showcase and sell their artwork, fea
   - Next.js API Routes
   - Square Payments API
   - Email service integration
+  - Firebase data management
 
 - **Authentication:**
   - Custom admin authentication system

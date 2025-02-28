@@ -1,7 +1,15 @@
+console.log("firebaseAdmin.ts file is running");
 import admin from "firebase-admin";
+console.log("process.env.FIREBASE_SERVICE_ACCOUNT_KEY", process.env.FIREBASE_ADMIN_CREDENTIALS);
 
 if (!admin.apps.length) {
     try {
+
+        if (!process.env.FIREBASE_ADMIN_CREDENTIALS) {
+            console.error("FIREBASE_ADMIN_CREDENTIALS is missing in environment variables.");
+        } else {
+            console.log("FIREBASE_ADMIN_CREDENTIALS exists.");
+        }
         const base64EncodedServiceAccount = process.env.FIREBASE_ADMIN_CREDENTIALS;
 
         if (!base64EncodedServiceAccount) {

@@ -1,11 +1,10 @@
 import { NextRequest } from "next/server";
+import admin from "../../../../firebaseAdmin"; 
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { getFirestore, doc, setDoc, updateDoc, deleteDoc, collection, getDocs, getDoc } from "firebase/firestore";
 import { firebaseApp } from "../../../../firebaseConfig";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import admin from "../../../../firebaseAdmin"; 
-import { getAuth } from "firebase/auth";
 
 // Initialize Firebase storage and Firestore
 const storage = getStorage(firebaseApp);
@@ -70,6 +69,7 @@ async function isAuthorized(req: NextRequest): Promise<boolean> {
   try {
     const cookieHeader = req.headers.get('cookie');
     console.log("cookieHeader", cookieHeader);
+    console.log("Firebase Admin Instance:", admin.apps.length);
 
     if (cookieHeader) {
       const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
