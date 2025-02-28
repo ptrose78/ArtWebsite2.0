@@ -35,7 +35,7 @@ const getCollectionRef = (type: string) => {
   throw new Error("Invalid item type");
 };
 
-export async function getIdToken(req: NextRequest) {
+async function getIdToken(req: NextRequest) {
   try {
     // Check Authorization header
     const authHeader = req.headers.get("Authorization");
