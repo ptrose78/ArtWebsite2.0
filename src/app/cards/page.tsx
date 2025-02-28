@@ -16,6 +16,8 @@ interface CardItem {
   description: string;
   featured: boolean;
   type: string;
+  width: string;
+  length: string;
 }
 
 export default function CardGalleryPage() {

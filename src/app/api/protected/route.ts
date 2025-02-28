@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
 // The secret key used to sign the JWT (you should store it securely)
+
+if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined in the environment variables');
+}
+
 const SECRET_KEY = process.env.JWT_SECRET;
 
 export async function GET(req: Request) {
@@ -21,6 +26,7 @@ export async function GET(req: Request) {
     try {
         // Verify the JWT token
         console.log('verify')
+
         const decoded = jwt.verify(token, SECRET_KEY);
 
         // If token is valid, continue with the protected logic

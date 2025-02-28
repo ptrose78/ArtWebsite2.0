@@ -2,7 +2,8 @@
 import Layout from "@/app/layout";
 import Link from 'next/link';
 import Image from 'next/image';
-import { fetchArts, addSubscribers } from '@/app/lib/data'
+import { addSubscribers } from '@/app/lib/data';
+
 import { useEffect, useState, useRef, FormEvent  } from 'react';
 import AddToCartButton from '@/app/components/AddToCartButton';
 import OrderNowButton from '@/app/components/OrderNowButton';
