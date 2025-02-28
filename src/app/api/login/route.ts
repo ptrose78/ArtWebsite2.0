@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   try {
     if (username === process.env.OWNERS_EMAIL) {
     // Use Firebase sign-in
-    const userCredential = await signInWithEmailAndPassword(auth, "paultrose1@gmail.com", password);
+    const userCredential = await signInWithEmailAndPassword(auth, username, password);
     const user = userCredential.user;
     console.log("user", user);
 

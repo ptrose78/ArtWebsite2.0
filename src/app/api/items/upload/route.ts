@@ -40,7 +40,7 @@ async function isAuthorized(req: NextRequest): Promise<boolean> {
 
       if (authToken) {
         const decodedToken = await admin.auth().verifyIdToken(authToken);
-        return decodedToken.email === "paultrose1@gmail.com";
+        return decodedToken.email === process.env.OWNERS_EMAIL;
       }
     }
   } catch (error) {

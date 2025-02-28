@@ -85,7 +85,7 @@ async function isAuthorized(req: NextRequest): Promise<boolean> {
         const decodedToken = await admin.auth().verifyIdToken(authToken);
         console.log("decodedToken.email", decodedToken.email);
         console.log("decodedToken.uid", decodedToken.uid);
-        return decodedToken.email === "paultrose1@gmail.com";
+        return decodedToken.email === process.env.OWNERS_EMAIL;
       }
     }
   } catch (error) {
