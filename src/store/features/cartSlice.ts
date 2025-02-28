@@ -18,15 +18,21 @@ const cartSlice = createSlice({
     addToCart(state, action: PayloadAction<any>) {
       console.log(action.payload); // Debugging payload
       state.items.push(action.payload);
+      console.log("state.items", state.items);
     
       const total = state.items.reduce((total, item) => {
+        if (!item || typeof item.price === "undefined") {
+          console.warn("Item missing price or undefined:", item);
+          return total; 
+        }
+
         const price = Number(item.price) || 0; // Handle invalid/missing prices
-        console.log(price); // Debugging price
+        console.log(price); 
         return total + price;
       }, 0);
     
       state.totalPrice = total.toFixed(2);
-      console.log(state.totalPrice); // Debugging totalPrice
+      console.log(state.totalPrice); 
     },
     removeFromCart(state, action: PayloadAction<number>) {
       state.items = state.items.filter(item => item.id !== action.payload);

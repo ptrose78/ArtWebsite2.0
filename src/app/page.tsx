@@ -9,7 +9,7 @@ import AddToCartButton from '@/app/components/AddToCartButton';
 import OrderNowButton from '@/app/components/OrderNowButton';
 
 interface GalleryItem {
-  id: number | string; // Accepts both numbers and strings
+  id: number | string;
   image_url: string;
   price: string;
   title: string;
@@ -69,6 +69,8 @@ export default function Home() {
       } else {
         alert(`Error fetching gallery items: ${result.error}`);
       }
+      console.log("galleryItems", result.items[0].price);
+
     } catch (error) {
       console.error("Error fetching gallery items:", error);
       alert("An error occurred while fetching gallery items.");
@@ -300,8 +302,8 @@ export default function Home() {
                   <p className="text-center text-gray-600 font-semibold text-lg mt-2">${parseFloat(art.price).toFixed(2)}</p>
                   <p className="text-center text-gray-600 font-semibold text-lg mt-2">{`${art.width} x ${art.length}`}</p>
                   <div className="flex justify-center space-x-4 items-center mt-2">
-                    <AddToCartButton art={art} />
-                    <OrderNowButton art={art} />
+                    <AddToCartButton item={art} />
+                    <OrderNowButton item={art} />
                   </div>
                 </div>
               </div>
@@ -309,7 +311,6 @@ export default function Home() {
           )}
         </div>
       </section>
-
 
       {/* Testimonials Section */}
       <section className="bg-gray-100 py-12 sm:py-16 px-4 sm:px-6 lg:px-8">

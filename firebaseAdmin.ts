@@ -1,19 +1,16 @@
 import admin from "firebase-admin";
-import { ServiceAccount } from "firebase-admin";
-
-console.log("firebaseAdmin.ts file is running");
-console.log("admin.apps.length:", admin.apps.length);
 
 if (!admin.apps.length) {
     try {
-        // Get the service account credentials from the environment variable
-        const serviceAccountJson = process.env.FIREBASE_ADMIN_CREDENTIALS;
+        const base64EncodedServiceAccount = process.env.FIREBASE_ADMIN_CREDENTIALS;
 
-        if (!serviceAccountJson) {
-            throw new Error('FIREBASE_ADMIN_CREDENTIALS environment variable is missing.');
+        if (!base64EncodedServiceAccount) {
+            throw new Error("FIREBASE_SERVICE_ACCOUNT_BASE64 is missing");
         }
 
-        const serviceAccount: ServiceAccount = JSON.parse(serviceAccountJson);
+        // Decode Base64 back to JSON
+        const serviceAccountJson = Buffer.from(base64EncodedServiceAccount, 'base64').toString('utf8');
+        const serviceAccount = JSON.parse(serviceAccountJson);
 
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
@@ -21,7 +18,7 @@ if (!admin.apps.length) {
 
         console.log("Firebase Admin SDK initialized successfully");
     } catch (error: any) {
-        console.error("Firebase admin initialization error", error.stack);
+        console.error("Firebase admin initialization error", error);
     }
 }
 
